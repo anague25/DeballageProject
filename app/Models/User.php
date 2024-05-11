@@ -26,10 +26,36 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'password',
         'gender',
-        'info',
-        'state',
+        'profileImage',
+        'status',
         'type',
+        'cniRecto',
+        'cniVerso',
     ];
+    public function shop()
+    {
+        return $this->hasOne(Shop::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'user_favorites');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
