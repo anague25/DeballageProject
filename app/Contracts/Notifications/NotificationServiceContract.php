@@ -14,22 +14,22 @@ interface NotificationServiceContract
 
 
     /**
-     * @param Notification $Notification
+     * @param Notification $notification
      */
-    public function show(Notification $Notification);
+    public function show(Notification $notification);
 
 
     public function index();
 
     /**
-     * @param Notification $Notification
+     * @param Notification $notification
      * @param array $data
      */
-    public function update(Notification $Notification, array $data);
+    public function update(Notification $notification, array $data);
 
 
     /**
-     * @param Notification $Notification
+     * @param Notification $notification
      */
-    public function delete(Notification $Notification);
+    public function delete(Notification $notification);
 }

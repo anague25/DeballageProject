@@ -14,22 +14,22 @@ interface PropertyServiceContract
 
 
     /**
-     * @param Property $Property
+     * @param Property $property
      */
-    public function show(Property $Property);
+    public function show(Property $property);
 
 
     public function index();
 
     /**
-     * @param Property $Property
+     * @param Property $property
      * @param array $data
      */
-    public function update(Property $Property, array $data);
+    public function update(Property $property, array $data);
 
 
     /**
-     * @param Property $Property
+     * @param Property $property
      */
-    public function delete(Property $Property);
+    public function delete(Property $property);
 }

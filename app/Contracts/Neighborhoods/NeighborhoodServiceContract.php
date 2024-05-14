@@ -14,22 +14,22 @@ interface NeighborhoodServiceContract
 
 
     /**
-     * @param Neighborhood $Neighborhood
+     * @param Neighborhood $neighborhood
      */
-    public function show(Neighborhood $Neighborhood);
+    public function show(Neighborhood $neighborhood);
 
 
     public function index();
 
     /**
-     * @param Neighborhood $Neighborhood
+     * @param Neighborhood $neighborhood
      * @param array $data
      */
-    public function update(Neighborhood $Neighborhood, array $data);
+    public function update(Neighborhood $neighborhood, array $data);
 
 
     /**
-     * @param Neighborhood $Neighborhood
+     * @param Neighborhood $neighborhood
      */
-    public function delete(Neighborhood $Neighborhood);
+    public function delete(Neighborhood $neighborhood);
 }

@@ -11,7 +11,7 @@ class ReviewUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class ReviewUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'image' => 'required|image|mimes:png,jpg,png,jpeg,gif,svg',
+            'product_id' => 'required|integer|exists:products,id',
         ];
     }
 }

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('image');
             $table->string('quantity');
             $table->string('price');
-            $table->string('status');
             $table->string('description');
             $table->enum('status', ['init', 'enable', 'desable'])->default('init');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');

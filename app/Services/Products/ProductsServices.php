@@ -4,12 +4,19 @@ namespace App\Services\Products;
 
 use App\Models\Product;
 use Illuminate\Http\Response;
-use App\Contracts\Products\ProductServiceContract;
+use ImageProductServiceContract;
 use App\Http\Resources\Products\ProductsResource;
+use App\Contracts\Products\ProductServiceContract;
 use App\Http\Resources\Products\ProductsCollection;
 
 class ProductsServices implements ProductServiceContract
 {
+    protected $imageService;
+
+    public function __construct(ImageProductServiceContract $imageService)
+    {
+        $this->imageService = $imageService;
+    }
 
     /**
      * create an product
