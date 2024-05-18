@@ -11,7 +11,7 @@ class DeliveriesUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,13 @@ class DeliveriesUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'city' => 'required|string',
+            'neighborhood' => 'required|string',
+            'phone' => 'required|string',
+            'email' => 'required|email',
             'address' => 'required|string',
             'order_id' => 'required|exists:orders,id',
+            'state' => 'required|string',
         ];
     }
 }

@@ -14,7 +14,7 @@ interface AttributeServiceContract
 
 
     /**
-     * @param Attribute $Attribute
+     * @param Attribute $attribute
      */
     public function show(Attribute $attribute);
 
@@ -22,14 +22,14 @@ interface AttributeServiceContract
     public function index();
 
     /**
-     * @param Attribute $Attribute
+     * @param Attribute $attribute
      * @param array $data
      */
     public function update(Attribute $attribute, array $data);
 
 
     /**
-     * @param Attribute $Attribute
+     * @param Attribute $attribute
      */
     public function delete(Attribute $attribute);
 }

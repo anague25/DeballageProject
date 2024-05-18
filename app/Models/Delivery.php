@@ -11,7 +11,7 @@ class Delivery extends Model
     protected $fillable = [
         'address',
         'order_id',
-        'status',
+        
     ];
 
 

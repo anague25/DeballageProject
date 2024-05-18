@@ -14,7 +14,7 @@ interface CityServiceContract
 
 
     /**
-     * @param City $City
+     * @param City $city
      */
     public function show(City $city);
 
@@ -22,14 +22,14 @@ interface CityServiceContract
     public function index();
 
     /**
-     * @param City $City
+     * @param City $city
      * @param array $data
      */
     public function update(City $city, array $data);
 
 
     /**
-     * @param City $City
+     * @param City $city
      */
     public function delete(City $city);
 }

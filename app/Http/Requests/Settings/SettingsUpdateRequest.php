@@ -11,7 +11,7 @@ class SettingsUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,28 @@ class SettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "monSite" => 'required|string',
+            "smtp" => 'required|string',
+            "phone" => 'required|string',
+            "adresseMail" => 'required|string',
+            "adressePysique" => 'required|string',
+            "siteName" => 'required|string',
+            "siteEmail" => 'required|string',
+            "siteContact1" => 'required|string',
+            "siteContact2" => 'required|string',
+            "siteLogoUrl" => 'required|string',
+            "siteLink" => 'required|string',
+            "siteAddress" => 'required|string',
+            "facebookPage" => 'required|string',
+            "siteCopyright" => 'required|string',
+            "siteKeywords" => 'required|string',
+            "siteAuthor" => 'required|string',
+            "linkedlinPage" => 'required|string',
+            "instagramPage" => 'required|string',
+            "twitterPage" => 'required|string',
+            "youtubePageLink" => 'required|string|url',
+            "siteDesc" => 'required|string',
+            "videoYoutubeLink" => 'required|string|url'
         ];
     }
 }

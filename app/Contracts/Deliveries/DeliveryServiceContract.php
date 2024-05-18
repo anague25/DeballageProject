@@ -16,7 +16,7 @@ interface DeliveryServiceContract
     /**
      * @param Delivery delivery
      */
-    public function show(Delivery $attribute);
+    public function show(Delivery $delivery);
 
 
     public function index();
@@ -25,11 +25,11 @@ interface DeliveryServiceContract
      * @param Delivery $delivery
      * @param array $data
      */
-    public function update(Delivery $attribute, array $data);
+    public function update(Delivery $delivery, array $data);
 
 
     /**
      * @param Delivery $delivery
      */
-    public function delete(Delivery $attribute);
+    public function delete(Delivery $delivery);
 }

@@ -2,12 +2,16 @@
 
 namespace App\Services\Deliveries;
 
+use App\Models\Order;
+use App\Models\Delivery;
 use App\Models\Deliveries;
 use Illuminate\Http\Response;
+use App\Mail\Order\AdminOrderMail;
+use App\Mail\Order\AchieveYourOrder;
+use Illuminate\Support\Facades\Mail;
 use App\Contracts\Deliveries\DeliveryserviceContract;
 use App\Http\Resources\Deliveries\DeliveriesResource;
 use App\Http\Resources\Deliveries\DeliveriesCollection;
-use App\Models\Delivery;
 
 class DeliveriesServices implements DeliveryserviceContract
 {
@@ -20,7 +24,11 @@ class DeliveriesServices implements DeliveryserviceContract
      */
     public function create($data): DeliveriesResource
     {
-        return new DeliveriesResource(Delivery::create($data));
+        $delivery = Delivery::create($data);
+        $order = Order::find($delivery->order_id);
+        Mail::to($delivery->email)->send(new AchieveYourOrder($order));
+        Mail::to(env('MAIL_ADMIN_EMAIL'))->send(new AdminOrderMail($order));
+        return new DeliveriesResource($delivery);
     }
 
     /**

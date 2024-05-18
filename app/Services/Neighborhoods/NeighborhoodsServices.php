@@ -12,7 +12,7 @@ class NeighborhoodsServices implements NeighborhoodServiceContract
 {
 
     /**
-     * create an $Neighborhood
+     * create a Neighborhood
      * 
      * @param array $data.
      * @return NeighborhoodsResource.
@@ -23,20 +23,20 @@ class NeighborhoodsServices implements NeighborhoodServiceContract
     }
 
     /**
-     * update an $Neighborhood
+     * update a Neighborhood
      * 
-     * @param Neighborhood $Neighborhood.
+     * @param Neighborhood $neighborhood.
      * @return NeighborhoodsResource.
      */
-    public function update(Neighborhood $Neighborhood, array $data): NeighborhoodsResource
+    public function update(Neighborhood $neighborhood, array $data): NeighborhoodsResource
     {
-        $Neighborhood->update($data);
-        return new NeighborhoodsResource($Neighborhood);
+        $neighborhood->update($data);
+        return new NeighborhoodsResource($neighborhood);
     }
 
 
     /**
-     * get all $Neighborhoods
+     * get all Neighborhoods
      * 
      * @return array.
      */
@@ -49,28 +49,28 @@ class NeighborhoodsServices implements NeighborhoodServiceContract
 
 
     /**
-     * get an $Neighborhood
-     * @param Neighborhood $Neighborhood
+     * get a Neighborhood
+     * @param Neighborhood $neighborhood
      * @return NeighborhoodsResource.
      */
 
-    public function show(Neighborhood $Neighborhood): NeighborhoodsResource
+    public function show(Neighborhood $neighborhood): NeighborhoodsResource
     {
-        return new NeighborhoodsResource($Neighborhood);
+        return new NeighborhoodsResource($neighborhood);
     }
 
 
 
     /**
-     * delete an $Neighborhood
+     * delete a Neighborhood
      * 
-     * @param Neighborhood $Neighborhood.
+     * @param Neighborhood $neighborhood.
      * @return Illuminate\Http\Response.
      */
 
-    public function delete(Neighborhood $Neighborhood): Response
+    public function delete(Neighborhood $neighborhood): Response
     {
-        $Neighborhood->delete();
+        $neighborhood->delete();
 
         return response()->noContent();
     }

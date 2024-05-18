@@ -44,7 +44,7 @@ class PropertiesServices implements PropertyServiceContract
     public function index(): PropertiesCollection
     {
 
-        return new PropertiesCollection(Property::all());
+        return new PropertiesCollection(Property::with('attribute')->get());
     }
 
 
@@ -56,7 +56,7 @@ class PropertiesServices implements PropertyServiceContract
 
     public function show(Property $property): PropertiesResource
     {
-        return new PropertiesResource($property);
+        return new PropertiesResource(Property::with('attribute')->find($property));
     }
 
 

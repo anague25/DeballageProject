@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->string('city');
+            $table->string('email');
+            $table->string('neighborhood');
             $table->string('address');
-            $table->enum('status', ['pending', 'delivered', 'cancelled'])->default('pending');
+            $table->enum('state', ['pending', 'delivered', 'cancelled'])->default('pending');
             // Foreign key constraint
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->timestamps();
