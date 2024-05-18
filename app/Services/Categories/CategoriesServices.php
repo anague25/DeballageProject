@@ -19,6 +19,9 @@ class CategoriesServices implements CategoryServiceContract
      */
     public function create($data): CategoriesResource
     {
+        $categoryImages = new CategoriesImagesServices($data);
+        $category = new Category();
+        $data = $categoryImages->uploadImage($category, $fieldName = 'image');
         return new CategoriesResource(Category::create($data));
     }
 
@@ -30,6 +33,10 @@ class CategoriesServices implements CategoryServiceContract
      */
     public function update(Category $category, array $data): CategoriesResource
     {
+
+
+        $categoryImages = new CategoriesImagesServices($data);
+        $data = $categoryImages->uploadImage($category, $fieldName = 'image');
         $category->update($data);
         return new CategoriesResource($category);
     }
@@ -43,8 +50,7 @@ class CategoriesServices implements CategoryServiceContract
 
     public function index(): CategoriesCollection
     {
-
-        return new CategoriesCollection(Category::all());
+        return new CategoriesCollection(Category::with('children')->whereNull('parent_id')->get());
     }
 
 
@@ -56,7 +62,8 @@ class CategoriesServices implements CategoryServiceContract
 
     public function show(Category $category): CategoriesResource
     {
-        return new CategoriesResource($category);
+
+        return new CategoriesResource($category->load('children'));
     }
 
 
@@ -70,6 +77,8 @@ class CategoriesServices implements CategoryServiceContract
 
     public function delete(Category $category): Response
     {
+        $categoryImages = new CategoriesImagesServices($data = []);
+        $categoryImages->deleteImage($category, $fieldName = 'image');
         $category->delete();
 
         return response()->noContent();

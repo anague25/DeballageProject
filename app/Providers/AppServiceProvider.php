@@ -28,6 +28,12 @@ use App\Contracts\OrderItems\OrderItemServiceContract;
 use App\Contracts\Neighborhoods\NeighborhoodServiceContract;
 use App\Contracts\Notifications\NotificationServiceContract;
 use App\Contracts\ProductImages\ProductImageServiceContract;
+use App\Contracts\Reviews\ReviewServiceContract;
+use App\Contracts\Settings\SettingServiceContract;
+use App\Contracts\Shop\ShopServiceContract;
+use App\Services\Reviews\ReviewsServices;
+use App\Services\Settings\SettingsServices;
+use App\Services\Shop\ShopServices;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -59,6 +65,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductImageServiceContract::class, ProductImagesServices::class);
 
         $this->app->bind(ProductServiceContract::class, ProductsServices::class);
+
+        $this->app->bind(ReviewServiceContract::class, ReviewsServices::class);
+
+        $this->app->bind(SettingServiceContract::class, SettingsServices::class);
+
+        $this->app->bind(ShopServiceContract::class, ShopServices::class);
     }
 
     /**

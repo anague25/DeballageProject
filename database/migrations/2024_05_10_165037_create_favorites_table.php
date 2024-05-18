@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->morphs('favoritable'); // Polymorphic relation
-            // Foreign key constraint
+            $table->unsignedBigInteger('favoritable_id');
+            $table->string('favoritable_type');
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->index(['favoritable_id', 'favoritable_type']);
+
             $table->timestamps();
         });
     }

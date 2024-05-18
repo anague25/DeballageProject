@@ -15,8 +15,17 @@ class City extends Model
 
     public function shops()
     {
-        return $this->belongsToMany(Shop::class);
+        return $this->belongsToMany(Shop::class, 'shop_city', 'city_id', 'shop_id')
+                    ->withPivot('neighborhood_id');
     }
+
+    public function pivotNeighborhoods()
+    {
+        return $this->belongsToMany(Neighborhood::class, 'shop_city', 'city_id', 'neighborhood_id')
+                    ->withPivot('shop_id');
+    }
+
+
 
     public function neighborhoods()
     {

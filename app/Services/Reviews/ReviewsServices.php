@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Contracts\Reviews\ReviewServiceContract;
 use App\Http\Resources\Review\ReviewResource;
 use App\Http\Resources\Review\ReviewCollection;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewsServices implements ReviewServiceContract
 {

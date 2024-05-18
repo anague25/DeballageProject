@@ -21,8 +21,9 @@ class CategoriesUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $category = $this->route('category');
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:categories,name,'. $category->id,
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'required|string',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif',

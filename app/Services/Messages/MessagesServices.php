@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use App\Contracts\Messages\MessageServiceContract;
 use App\Http\Resources\Messages\MessagesResource;
 use App\Http\Resources\Messages\MessagesCollection;
+use App\Mail\UserContactDeballage;
+use Illuminate\Support\Facades\Mail;
 
 class MessagesServices implements MessageServiceContract
 {
@@ -18,7 +20,8 @@ class MessagesServices implements MessageServiceContract
      * @return MessagesResource.
      */
     public function create($data): MessagesResource
-    {
+    {   
+        Mail::send(new UserContactDeballage($data));
         return new MessagesResource(Message::create($data));
     }
 

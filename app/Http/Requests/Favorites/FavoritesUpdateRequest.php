@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Favorites;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FavoritesUpdateRequest extends FormRequest
@@ -22,9 +23,21 @@ class FavoritesUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id|integer',
-            'favoritable_type' => 'required',
-            'favoritable_id' => 'required'
+            'favoritable_type' => 'required|in:Product,Shop',
+            'favoritable_id' => 'required|exists:' . $this->input('favoritable_type') . 's,id',
         ];
+    }
+
+    /**
+     * Prépare les données pour validation.
+     *
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
+        $this->merge([
+            'user_id' => Auth::id()
+        ]);
     }
 }

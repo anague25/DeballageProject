@@ -2,48 +2,60 @@
 
 namespace App\Http\Controllers\Admin\Settings;
 
-use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Contracts\Settings\SettingServiceContract;
+use App\Http\Requests\Settings\SettingsUpdateRequest;
 
 class SettingsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private $settingsService;
+
+    public function __construct(SettingServiceContract $settingsService)
     {
-        //
+        $this->settingsService = $settingsService;
     }
+
+    /**
+     * Display a listing of the categorys.
+     * 
+     */
+    // public function index()
+    // {
+    //     return $this->settingsService->index();
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     return  $this->settingsService->create($request->validated());
+    // }
+
+    /**
+     * Display the specified setting.
+     * 
+     */
+    public function show(Setting $setting)
     {
-        //
+        return $this->settingsService->show($setting);
     }
 
     /**
-     * Display the specified resource.
+     * Update the specified setting in storage.
      */
-    public function show(string $id)
+    public function update(SettingsUpdateRequest $request, Setting $setting)
     {
-        //
+        return $this->settingsService->update($setting, $request->validated());
     }
 
     /**
-     * Update the specified resource in storage.
+     * Remove the specified setting from storage.
      */
-    public function update(Request $request, string $id)
+    public function destroy(Setting $setting)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $this->settingsService->delete($setting);
     }
 }

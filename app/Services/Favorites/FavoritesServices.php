@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Contracts\Favorites\FavoriteServiceContract;
 use App\Http\Resources\Favorites\FavoritesResource;
 use App\Http\Resources\Favorites\FavoritesCollection;
+use Illuminate\Support\Facades\Auth;
 
 class FavoritesServices implements FavoriteServiceContract
 {

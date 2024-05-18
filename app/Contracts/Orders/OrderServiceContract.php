@@ -32,4 +32,9 @@ interface OrderServiceContract
      * @param Order $order
      */
     public function delete(Order $order);
+
+    /**
+     * @param string $token
+     */
+    public function associateOrder($token);
 }

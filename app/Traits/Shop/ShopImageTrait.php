@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Shop;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-trait HasImageTrait
+trait ShopImageTrait
 {
-    public function uploadImage(UploadedFile $file, string $directory = 'images/shop', string $disk = 'public'): string
+    public function storeImage(UploadedFile $file, string $directory = 'images/shops', string $disk = 'public'): string
     {
         return $file->store($directory, $disk);
     }
 
-    public function deleteImage(string $path): void
+    public function destroyImage(string $path): void
     {
         if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);

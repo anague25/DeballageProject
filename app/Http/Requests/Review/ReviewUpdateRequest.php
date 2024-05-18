@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Review;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReviewUpdateRequest extends FormRequest
@@ -22,8 +23,24 @@ class ReviewUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:png,jpg,png,jpeg,gif,svg',
-            'product_id' => 'required|integer|exists:products,id',
+            'reviewable_id' => 'required|integer',
+            'reviewable_type' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string',
         ];
+    }
+
+
+    /**
+     * Prépare les données pour validation.
+     *
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
+        $this->merge([
+            'user_id' => Auth::id()
+        ]);
     }
 }

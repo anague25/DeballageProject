@@ -37,10 +37,17 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
-    public function favorites()
-    {
-        return $this->belongsToMany(User::class, 'user_favorites');
-    }
+     // Relation pour les avis (Review)
+     public function reviews()
+     {
+         return $this->morphMany(Review::class, 'reviewable');
+     }
+ 
+     // Relation pour les favoris (Favorite)
+     public function favorites()
+     {
+         return $this->morphMany(Favorite::class, 'favoritable');
+     }
 
     public function orders()
     {

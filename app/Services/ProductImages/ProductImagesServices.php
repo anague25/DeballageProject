@@ -2,23 +2,37 @@
 
 namespace App\Services\ProductImages;
 
+use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Response;
-use App\Contracts\ProductImages\ProductImageServiceContract;
+use App\Traits\Products\ProductMultipleImagesTrait;
 use App\Http\Resources\ProductImages\ProductImagesResource;
+use App\Contracts\ProductImages\ProductImageServiceContract;
 use App\Http\Resources\ProductImages\ProductImagesCollection;
 
 class ProductImagesServices implements ProductImageServiceContract
 {
+    use ProductMultipleImagesTrait;
 
     /**
      * create a productImage
      * @param array $data.
+     * @param Product $product.
      * @return ProductImagesResource.
      */
-    public function create($data): ProductImagesResource
+    public function create(Product $product, $data)
     {
-        return new ProductImagesResource(ProductImage::create($data));
+        $uploadedImagePaths = [];
+
+        foreach ($data as $image) {
+            $uploadedImagePath = $this->storeImage($image);
+
+            $product->images()->create(['images' => $uploadedImagePath]);
+
+            $uploadedImagePaths[] = $uploadedImagePath;
+        }
+
+        return response()->json(['uploaded_images' => $uploadedImagePaths], 200);
     }
 
     /**
@@ -29,6 +43,8 @@ class ProductImagesServices implements ProductImageServiceContract
      */
     public function update(ProductImage $productImage, array $data): ProductImagesResource
     {
+        $this->destroyImage($productImage->images);
+        $data['images'] = $this->storeImage($data['images']);
         $productImage->update($data);
         return new ProductImagesResource($productImage);
     }
@@ -40,17 +56,22 @@ class ProductImagesServices implements ProductImageServiceContract
      * @return array.
      */
 
-    public function index(): ProductImagesCollection
-    {
-
-        return new ProductImagesCollection(ProductImage::all());
-    }
+     public function index($productId): ProductImagesCollection
+     {
+         // Trouver le produit par son ID
+         $product = Product::findOrFail($productId);
+ 
+         // Récupérer toutes les images liées au produit
+         $images = $product->images;
+ 
+         return new ProductImagesCollection($images);
+     }
 
 
     /**
      * get an productImage
      * @param ProductImage $productImage
-     * @return ProductImagesResource.
+     * @return ProductImagesResource
      */
 
     public function show(ProductImage $productImage): ProductImagesResource
@@ -69,6 +90,7 @@ class ProductImagesServices implements ProductImageServiceContract
 
     public function delete(ProductImage $productImage): Response
     {
+        $this->destroyImage($productImage->images);
         $productImage->delete();
 
         return response()->noContent();

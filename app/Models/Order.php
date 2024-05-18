@@ -10,8 +10,9 @@ class Order extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'number',
         'total_amount',
-        'status',
+        'state',
     ];
 
 
@@ -20,10 +21,10 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'price');
-    }
+    // public function products()
+    // {
+    //     return $this->belongsToMany(Product::class)->withPivot('quantity', 'price');
+    // }
 
     public function notifications()
     {

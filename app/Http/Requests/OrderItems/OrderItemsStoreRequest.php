@@ -22,7 +22,9 @@ class OrderItemsStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            '*.product_id' => 'required|exists:products,id',
+            '*.price' => 'required|numeric',
+            '*.quantity' => 'required|numeric',
         ];
     }
 }

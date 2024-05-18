@@ -24,8 +24,9 @@ class MessagesUpdateRequest extends FormRequest
         return [
             'phone' => 'required|string',
             'email' => 'required|string|email',
-            'title' => 'required|string',
-            'subject' => 'required|string',
+            'firstName' => 'required|string',
+            'lastname' => 'required|string',
+            'message' => 'required|string',
         ];
     }
 }

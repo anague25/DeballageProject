@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Shop;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ShopStoreRequest extends FormRequest
@@ -26,8 +27,24 @@ class ShopStoreRequest extends FormRequest
             'description' => 'required|string',
             'state' => 'required|string',
             'profile' => 'required|string',
-            'cover' => 'required|string',
-            'info' => 'required|string',
+            'cover' => 'nullable|string',
+            'info' => 'nullable|string',
+            'city_fields.*.city_id' => 'required|exists:cities,id',
+            'city_fields.*.neighborhood_id' => 'required|exists:neighborhoods,id',
         ];
+    }
+
+
+    /**
+     * Prépare les données pour validation.
+     *
+     * @return array
+     */
+    protected function prepareForValidation()
+    {
+        // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
+        $this->merge([
+            'user_id' => Auth::id()
+        ]);
     }
 }

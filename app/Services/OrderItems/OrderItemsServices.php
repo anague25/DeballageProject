@@ -2,10 +2,14 @@
 
 namespace App\Services\OrderItems;
 
+use App\Models\Shop;
+use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Response;
-use App\Contracts\OrderItems\OrderItemServiceContract;
+use App\Mail\Order\SellerOrderMail;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderItems\OrderItemsResource;
+use App\Contracts\OrderItems\OrderItemServiceContract;
 use App\Http\Resources\OrderItems\OrderItemsCollection;
 
 class OrderItemsServices implements OrderItemServiceContract
@@ -15,23 +19,53 @@ class OrderItemsServices implements OrderItemServiceContract
      * create an orderItem
      * 
      * @param array $data.
-     * @return OrderItemsResource.
+     * @return OrderItemsCollection.
      */
-    public function create($data): OrderItemsResource
+    public function create(Order $order,$validatedData): OrderItemsCollection
     {
-        return new OrderItemsResource(OrderItem::create($data));
+        $orderItems = [];
+
+        foreach ($validatedData as $itemData) {
+            $orderItem = new OrderItem($itemData);
+            $order->orderItems()->save($orderItem);
+            $orderItems[] = $orderItem;
+        }
+
+        
+
+        return new OrderItemsCollection(OrderItem::create($orderItems));
+    }
+
+
+    public function notifySellers($orderId)
+    {
+        $productItems = OrderItem::where('order_id', $orderId)->get();
+        $productsByShop = $productItems->groupBy('shop_id');
+
+        foreach ($productsByShop as $shopId => $items) {
+            $shop = Shop::find($shopId);
+            $sellerEmail = $shop->user->email;
+            Mail::to($sellerEmail)->send(new SellerOrderMail($items));
+        }
     }
 
     /**
      * update an OrderItem
      * 
      * @param OrderItem $OrderItem.
-     * @return OrderItemsResource.
+     * @return OrderItemsCollection.
      */
-    public function update(OrderItem $orderItem, array $data): OrderItemsResource
+    public function update(array $validatedData): OrderItemsCollection
     {
-        $orderItem->update($data);
-        return new OrderItemsResource($orderItem);
+        $updatedOrderItems = [];
+
+    foreach ($validatedData as $itemData) {
+        $orderItem = OrderItem::findOrFail($itemData['id']);
+        $orderItem->update($itemData);
+        $updatedOrderItems[] = $orderItem;
+    }
+
+        return new OrderItemsCollection($updatedOrderItems);
     }
 
 

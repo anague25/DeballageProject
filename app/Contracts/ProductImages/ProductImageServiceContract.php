@@ -2,6 +2,7 @@
 
 namespace App\Contracts\ProductImages;
 
+use App\Models\Product;
 use App\Models\ProductImage;
 
 interface ProductImageServiceContract
@@ -10,7 +11,7 @@ interface ProductImageServiceContract
     /**
      * @param array $data
      */
-    public function create(array $data);
+    public function create(Product $product, array $data);
 
 
     /**
@@ -19,7 +20,7 @@ interface ProductImageServiceContract
     public function show(ProductImage $productImage);
 
 
-    public function index();
+    public function index($productId);
 
     /**
      * @param ProductImage $productImage
