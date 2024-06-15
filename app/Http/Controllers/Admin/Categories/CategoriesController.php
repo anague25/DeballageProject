@@ -27,6 +27,15 @@ class CategoriesController extends Controller
     }
 
     /**
+     * Display a listing of the categorys.
+     * 
+     */
+    public function all()
+    {
+        return $this->categoriesService->all();
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(CategoriesStoreRequest $request)

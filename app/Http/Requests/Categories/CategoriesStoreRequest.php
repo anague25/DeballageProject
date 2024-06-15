@@ -22,7 +22,7 @@ class CategoriesStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:categories',
+            'name' => 'required|string|unique:categories,name',
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'required|string',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif|max:2042',

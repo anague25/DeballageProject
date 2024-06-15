@@ -21,6 +21,8 @@ interface CityServiceContract
 
     public function index();
 
+    public function all();
+
     /**
      * @param City $city
      * @param array $data

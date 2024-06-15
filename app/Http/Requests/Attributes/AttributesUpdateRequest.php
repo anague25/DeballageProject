@@ -19,10 +19,12 @@ class AttributesUpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules()
     {
+        $attributeId = $this->route('attribute');
+
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|unique:attributes,name,' . $attributeId->id,
         ];
     }
 }

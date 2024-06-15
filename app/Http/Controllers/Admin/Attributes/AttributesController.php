@@ -27,6 +27,12 @@ class AttributesController extends Controller
       return $this->attributesService->index();
     }
 
+    public function all()
+    {
+      return $this->attributesService->all();
+    }
+  
+  
     /**
      * Store a newly created resource in storage.
      */
@@ -49,6 +55,7 @@ class AttributesController extends Controller
      */
     public function update(AttributesUpdateRequest $request, Attribute $attribute)
     {
+      
        return $this->attributesService->update($attribute,$request->validated());
     }
 
@@ -59,4 +66,6 @@ class AttributesController extends Controller
     {
         return $this->attributesService->delete($attribute);
     }
+
+   
 }

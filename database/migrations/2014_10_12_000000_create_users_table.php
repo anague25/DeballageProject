@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('firstName');
             $table->string('lastName');
-            $table->string('profileImage');
+            $table->string('profile');
             $table->string('cniRecto');
             $table->string('cniVerso');
             $table->string('phone');
             $table->string('gender');
-            $table->enum('status', ['init', 'enable', 'desable'])->default('init');
+            $table->enum('state', ['init', 'enable', 'desable'])->default('init');
             $table->enum('type', ['admin', 'user', 'desable'])->default('user');
             $table->string('email')->unique();
+            $table->string('role');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

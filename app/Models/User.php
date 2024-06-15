@@ -26,11 +26,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'password',
         'gender',
-        'profileImage',
-        'status',
+        'profile',
+        'state',
         'type',
         'cniRecto',
         'cniVerso',
+        'role',
     ];
     public function shop()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Products;
+namespace App\Services\Shop;
 
 use App\Models\Shop;
 use App\Traits\Shop\ShopImageTrait;

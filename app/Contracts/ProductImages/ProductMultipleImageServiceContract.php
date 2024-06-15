@@ -5,7 +5,7 @@ namespace App\Contracts\ProductImages;
 use App\Models\Product;
 use App\Models\ProductImage;
 
-interface ProductImageServiceContract
+interface ProductMultipleImageServiceContract
 {
 
     /**

@@ -24,12 +24,13 @@ class ProductsUpdateRequest extends FormRequest
         return [
             'name' => 'required|string',
             'description' => 'required|string',
-            'image' => 'required|image',
+            'image' => 'nullable|image',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'attribute_fields.*.attribute_id' => 'required|exists:attributes,id',
             'attribute_fields.*.property_id' => 'required|exists:properties,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,gif|max:2048',
         ];
     }
 }

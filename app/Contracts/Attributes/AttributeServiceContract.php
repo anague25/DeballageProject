@@ -21,6 +21,8 @@ interface AttributeServiceContract
 
     public function index();
 
+    public function all();
+
     /**
      * @param Attribute $attribute
      * @param array $data
@@ -32,4 +34,6 @@ interface AttributeServiceContract
      * @param Attribute $attribute
      */
     public function delete(Attribute $attribute);
+
+   
 }

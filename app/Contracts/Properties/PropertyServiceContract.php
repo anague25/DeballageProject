@@ -20,6 +20,8 @@ interface PropertyServiceContract
 
 
     public function index();
+    
+    public function all();
 
     /**
      * @param Property $property

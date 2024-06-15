@@ -21,8 +21,9 @@ class CitiesUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $city = $this->route('city');
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|unique:cities,name,' . $city->id,
         ];
     }
 }

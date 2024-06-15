@@ -20,6 +20,8 @@ interface ShopServiceContract
 
 
     public function index();
+    
+    public function all();
 
     /**
      * @param Shop $Shop

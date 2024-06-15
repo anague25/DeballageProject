@@ -30,4 +30,10 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function shops()
+    {
+        return $this->belongsToMany(Shop::class, 'category_shop')
+                    ->withPivot('sub_category_id');
+    }
 }

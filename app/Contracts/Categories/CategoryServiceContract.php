@@ -21,6 +21,8 @@ interface CategoryServiceContract
 
     public function index();
 
+    public function all();
+
     /**
      * @param Category attribute
      * @param array $data

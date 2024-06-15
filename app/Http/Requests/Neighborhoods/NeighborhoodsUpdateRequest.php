@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Neighborhood;
+namespace App\Http\Requests\Neighborhoods;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NeighborhoodUpdateRequest extends FormRequest
+class NeighborhoodsUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

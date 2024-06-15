@@ -20,6 +20,8 @@ interface ProductServiceContract
 
 
     public function index();
+    
+    public function all();
 
     /**
      * @param Product $Product

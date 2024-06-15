@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Products;
+namespace App\Traits\ProductMultipleImages;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

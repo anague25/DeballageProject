@@ -5,12 +5,12 @@ namespace App\Services\ProductImages;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Response;
-use App\Traits\Products\ProductMultipleImagesTrait;
+use App\Traits\ProductMultipleImages\ProductMultipleImagesTrait;
 use App\Http\Resources\ProductImages\ProductImagesResource;
-use App\Contracts\ProductImages\ProductImageServiceContract;
 use App\Http\Resources\ProductImages\ProductImagesCollection;
+use App\Contracts\ProductImages\ProductMultipleImageServiceContract;
 
-class ProductImagesServices implements ProductImageServiceContract
+class ProductMultipleImagesServices implements ProductMultipleImageServiceContract
 {
     use ProductMultipleImagesTrait;
 

@@ -26,6 +26,11 @@ class PropertiesController extends Controller
         return $this->propertiesService->index();
     }
 
+    public function all()
+    {
+        return $this->propertiesService->all();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

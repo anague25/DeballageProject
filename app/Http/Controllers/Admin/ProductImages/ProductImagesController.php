@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Admin\ProductImages;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Http\Controllers\Controller;
-use App\Contracts\ProductImages\ProductImageServiceContract;
 use App\Http\Requests\ProductImages\ProductImageStoreRequest;
 use App\Http\Requests\ProductImages\ProductImageUpdateRequest;
+use App\Contracts\ProductImages\ProductMultipleImageServiceContract;
 
 class ProductImagesController extends Controller
 {
     private $productImagesService;
 
-    public function __construct(ProductImageServiceContract $productImagesService)
+    public function __construct(ProductMultipleImageServiceContract $productImagesService)
     {
         $this->productImagesService = $productImagesService;
     }
