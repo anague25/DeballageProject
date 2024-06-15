@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Neighborhoods;
+namespace App\Http\Resources\User\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class NeighborhoodsResource extends JsonResource
+class ProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,6 @@ class NeighborhoodsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id'=>$this->id,
-            'name'=>$this->name,
-            'city'=>$this->city
-        ];
+        return parent::toArray($request);
     }
 }

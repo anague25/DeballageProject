@@ -21,13 +21,17 @@ class ProductsStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd(request()->all());
         return [
             'name' => 'required|string',
             'description' => 'required|string',
+            'images' => 'required|array', // Ajoutez cette règle
+            'images.*' => 'required|image|mimes:jpeg,png,gif|max:2048',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'required|image',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'shop_id' => 'required|exists:shops,id',
             'attribute_fields.*.attribute_id' => 'required|exists:attributes,id',
             'attribute_fields.*.property_id' => 'required|exists:properties,id',
         ];

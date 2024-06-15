@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Shop\ShopController;
 use App\Http\Controllers\Admin\Order\OrderController;
 use App\Http\Controllers\Admin\Cities\CitiesController;
-use App\Http\Controllers\Admin\User\Auth\AuthController;
+use App\Http\Controllers\Admin\User\Auth\UserController;
 use App\Http\Controllers\Admin\Reviews\ReviewsController;
 use App\Http\Controllers\Admin\User\Auth\LoginController;
 use App\Http\Controllers\Admin\User\Auth\LogoutController;
@@ -24,6 +24,8 @@ use App\Http\Controllers\Admin\User\Auth\PasswordResetController;
 use App\Http\Controllers\Admin\Neighborhoods\NeighborhoodsController;
 use App\Http\Controllers\Admin\Notifications\NotificationsController;
 use App\Http\Controllers\Admin\ProductImages\ProductImagesController;
+use App\Http\Controllers\Admin\User\Auth\ProfileController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,27 +42,40 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Authentification
-Route::post('login', LoginController::class);
-Route::post('logout', LogoutController::class);
-Route::post('register', RegisterController::class);
-Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset')->middleware('signed');
-Route::post('email/verify/send', [VerifyEmailController::class, 'sendMail']);
-Route::post('email/verify', [VerifyEmailController::class, 'verify'])->middleware('signed')->name('verify-email');
 
-//manage the Shop
-Route::apiResource('/shop', ShopController::class);
+// users
+Route::prefix('users')->group(function () {
+
+    //Authentification
+    Route::post('/login', LoginController::class);
+    Route::post('/logout', LogoutController::class);
+    Route::post('/register', RegisterController::class);
+    Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
+    Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset')->middleware('signed');
+    Route::post('/email/verify/send', [VerifyEmailController::class, 'sendMail']);
+    Route::post('/email/verify', [VerifyEmailController::class, 'verify'])->middleware('signed')->name('verify-email');
+
+    Route::get('/all', [UserController::class, 'all']);
+    Route::get('/index', [UserController::class, 'index']);
+    Route::get('/{user}', [UserController::class, 'show']);
+    Route::post('/{user}', ProfileController::class);
+    Route::delete('/{user}', [UserController::class, 'destroy']);
+});
+
+
 
 //manage the categories
+Route::get('/categories/all', [CategoriesController::class, 'all']);
 Route::apiResource('/categories', CategoriesController::class)->except('update');
 Route::post('/categories/{category}', [CategoriesController::class, 'update']);
 
 
 //manage the attributes
+Route::get('/attributes/all', [AttributesController::class, 'all']);
 Route::apiResource('/attributes', AttributesController::class);
 
 //manage the cities
+Route::get('/cities/all', [CitiesController::class, 'all']);
 Route::apiResource('/cities', CitiesController::class);
 
 //manage the deliveries
@@ -73,7 +88,7 @@ Route::apiResource('/favorites', FavoritesController::class);
 Route::apiResource('/messages', MessagesController::class);
 
 //manage the neighbordhood
-Route::apiResource('/neighbordhood', NeighborhoodsController::class);
+Route::apiResource('/neighborhoods', NeighborhoodsController::class);
 
 //manage the notifications
 Route::apiResource('/notifications', NotificationsController::class);
@@ -86,9 +101,12 @@ Route::apiResource('/orders', OrderController::class);
 Route::apiResource('/order-items', OrderItemsController::class);
 
 //manage the products 
-Route::apiResource('/products', ProductsController::class);
+Route::get('/products/all', [ProductsController::class, 'all']);
+Route::apiResource('/products', ProductsController::class)->except('update');
+Route::post('/products/{product}', [ProductsController::class, 'update']);
 
 //manage the properties
+Route::get('/properties/all', [PropertiesController::class, 'all']);
 Route::apiResource('/properties', PropertiesController::class);
 
 //manage the reviews
@@ -98,12 +116,12 @@ Route::apiResource('/reviews', ReviewsController::class);
 Route::apiResource('/settings', SettingsController::class);
 
 //manage the shops
-Route::apiResource('/shops', ShopController::class);
+Route::get('/shops/all', [ShopController::class, 'all']);
+Route::apiResource('/shops', ShopController::class)->except('update');
+Route::post('/shops/{shop}', [ShopController::class, 'update']);
 
 //manage the Shop
 Route::apiResource('/productImages', ProductImagesController::class)->only('delete', 'show');
 Route::post('productImages/{product}', [ProductImagesController::class, 'store']);
 Route::post('productImages/{productImage}', [ProductImagesController::class, 'update']);
-Route::get('productImages/{product}', [ProductImagesController::class, 'update']);
-
-
+Route::get('productImages/{product}', [ProductImagesController::class, 'index']);

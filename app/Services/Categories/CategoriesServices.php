@@ -43,14 +43,29 @@ class CategoriesServices implements CategoryServiceContract
 
 
     /**
-     * get all $attributes
+     * get all $attributes with pagination
      * 
      * @return array.
      */
 
     public function index(): CategoriesCollection
     {
-        return new CategoriesCollection(Category::with('children')->whereNull('parent_id')->get());
+        $categories =  Category::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%");
+        })->with('children')->latest()->paginate(5);
+        return new CategoriesCollection($categories);
+    }
+
+    /**
+     * get all $attributes without pagination
+     * 
+     * @return array.
+     */
+
+    public function all(): CategoriesCollection
+    {
+        $categories = Category::with('children')->latest()->get();
+        return new CategoriesCollection($categories);
     }
 
 

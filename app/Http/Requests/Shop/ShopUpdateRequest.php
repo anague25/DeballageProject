@@ -23,28 +23,20 @@ class ShopUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|exists:users,id',
             'name' => 'required|string',
             'description' => 'required|string',
-            'state' => 'required|string',
-            'profile' => 'required|string',
-            'cover' => 'nullable|string',
+            'state' => 'nullable|string',
+            'profile' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2042',
+            'cover' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2042',
             'info' => 'nullable|string',
             'city_fields.*.city_id' => 'required|exists:cities,id',
             'city_fields.*.neighborhood_id' => 'required|exists:neighborhoods,id',
+            'category_fields.*.category_id' => 'required|exists:categories,id',
+            'category_fields.*.subCategory_id' => 'required|exists:categories,id',
         ];
     }
 
 
-    /**
-     * Prépare les données pour validation.
-     *
-     * @return array
-     */
-    protected function prepareForValidation()
-    {
-        // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
-        $this->merge([
-            'user_id' => Auth::id()
-        ]);
-    }
+   
 }

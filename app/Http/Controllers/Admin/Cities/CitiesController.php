@@ -26,6 +26,11 @@ class CitiesController extends Controller
         return $this->citiesService->index();
     }
 
+    public function all()
+    {
+        return $this->citiesService->all();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

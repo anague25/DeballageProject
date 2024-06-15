@@ -44,7 +44,16 @@ class AttributesServices implements AttributeServiceContract
     public function index(): AttributesCollection
     {
 
-        return new AttributesCollection(Attribute::all());
+        // dd(request('query'));
+        $attributes =  Attribute::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%");
+        })->latest()->paginate(5);
+        return new AttributesCollection($attributes);
+    }
+
+    public function all(): AttributesCollection
+    {
+        return new AttributesCollection(Attribute::latest()->get());
     }
 
 
@@ -56,7 +65,7 @@ class AttributesServices implements AttributeServiceContract
 
     public function show(Attribute $attribute): AttributesResource
     {
-        return new AttributesResource($attribute);
+        return new AttributesResource($attribute->load('properties'));
     }
 
 
@@ -74,4 +83,5 @@ class AttributesServices implements AttributeServiceContract
 
         return response()->noContent();
     }
+
 }

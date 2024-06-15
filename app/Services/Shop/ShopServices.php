@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Resources\Shop\ShopResource;
 use App\Contracts\Shop\ShopServiceContract;
 use App\Http\Resources\Shop\ShopCollection;
-use App\Services\Products\ShopsImagesServices;
+use App\Services\Shop\ShopsImagesServices;
 
 class ShopServices implements ShopServiceContract
 {
@@ -24,16 +24,33 @@ class ShopServices implements ShopServiceContract
         $shopImages = new ShopsImagesServices($validatedData);
         $shopImages->uploadImage($shop, 'profile');
         $data = $shopImages->uploadImage($shop, 'cover');
-        $data = Shop::create($data);
-        $cityNeighborhoodPairs = collect($validatedData['city_fields'])->pluck('neighborhood_id', 'city_id')->toArray();
-        $shop->cities()->sync($cityNeighborhoodPairs);
+        $shop = Shop::create($data);
+        $cityNeighborhoodPairs = collect($validatedData['city_fields'])
+            ->mapWithKeys(function ($item) {
+                return [$item['city_id'] . '-' . $item['neighborhood_id'] => [
+                    'city_id' => $item['city_id'],
+                    'neighborhood_id' => $item['neighborhood_id']
+                ]];
+            })
+            ->values()
+            ->toArray();
 
-        // foreach ($validatedData['city_fields'] as $cityField) {
-        //     $shop->cities()->attach($cityField['city_id'], ['neighborhood_id' => $cityField['neighborhood_id']]);
-        // }
+
+        $categorySubCategoryPairs = collect($validatedData['category_fields'])
+            ->mapWithKeys(function ($item) {
+                return [$item['category_id'] . '-' . $item['subCategory_id'] => [
+                    'category_id' => $item['category_id'],
+                    'subCategory_id' => $item['subCategory_id']
+                ]];
+            })
+            ->values()
+            ->toArray();
+
+        $shop->cities()->attach($cityNeighborhoodPairs);
+        $shop->categories()->attach($categorySubCategoryPairs);
 
         // Créer le shop avec les données mises à jour
-        return new ShopResource($data);
+        return new ShopResource($shop);
     }
 
     /**
@@ -48,8 +65,28 @@ class ShopServices implements ShopServiceContract
         $shopImages->uploadImage($shop, 'profile');
         $data = $shopImages->uploadImage($shop, 'cover');
         $shop->update($data);
-        $cityNeighborhoodPairs = collect($validatedData['city_fields'])->pluck('neighborhood_id', 'city_id')->toArray();
+        $cityNeighborhoodPairs = collect($validatedData['city_fields'])
+            ->mapWithKeys(function ($item) {
+                return [$item['city_id'] . '-' . $item['neighborhood_id'] => [
+                    'city_id' => $item['city_id'],
+                    'neighborhood_id' => $item['neighborhood_id']
+                ]];
+            })
+            ->values()
+            ->toArray();
+
+        $categorySubCategoryPairs = collect($validatedData['category_fields'])
+            ->mapWithKeys(function ($item) {
+                return [$item['category_id'] . '-' . $item['subCategory_id'] => [
+                    'category_id' => $item['category_id'],
+                    'subCategory_id' => $item['subCategory_id']
+                ]];
+            })
+            ->values()
+            ->toArray();
+
         $shop->cities()->sync($cityNeighborhoodPairs);
+        $shop->categories()->sync($categorySubCategoryPairs);
 
         return new ShopResource($shop);
     }
@@ -62,6 +99,14 @@ class ShopServices implements ShopServiceContract
      */
 
     public function index(): ShopCollection
+    {
+        $shops =  Shop::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%");
+        })->with('user', 'cities', 'products', 'categories')->latest()->paginate(5);
+        return new ShopCollection($shops);
+    }
+
+    public function all(): ShopCollection
     {
 
         return new ShopCollection(Shop::all());
@@ -93,8 +138,8 @@ class ShopServices implements ShopServiceContract
         $shopImages = new ShopsImagesServices($validatedData = []);
         $shopImages->deleteImage($shop, $fieldName = 'profile');
         $shopImages->deleteImage($shop, $fieldName = 'cover');
-        $shop->cities()->detach();
-        $shop->neighborhoods()->detach();
+        $shop->cities()->delete();
+        $shop->categories()->delete();
         $shop->delete();
 
         return response()->noContent();

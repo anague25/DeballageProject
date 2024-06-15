@@ -4,7 +4,7 @@ namespace App\Http\Requests\User\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|confirmed|min:6',
+            'email' => 'required|email|max:255|unique:users,email,'.request()->id,
+            'password' => 'sometimes|confirmed|min:6',
             'firstName' => 'required|string',
             'lastName' => 'required|string',
             'phone' => 'required|string',
@@ -32,8 +31,8 @@ class RegisterRequest extends FormRequest
             'cniVerso' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
             'gender' => 'required|string',
             'state' => 'sometimes|string|in:init,enable,desable',
-            'role' => 'sometimes|string|in:admin,seller',
-            'profile' => 'required|image|mimes:jpg,png,jpeg,gif|max:2042',
+            'role' => 'nullable|string|in:admin,seller',
+            'profile' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
         ];
     }
 }

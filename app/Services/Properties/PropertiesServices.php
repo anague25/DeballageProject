@@ -43,8 +43,16 @@ class PropertiesServices implements PropertyServiceContract
 
     public function index(): PropertiesCollection
     {
+        $property = Property::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%")->get();
+        })->with('attribute')->latest()->paginate(5);
 
-        return new PropertiesCollection(Property::with('attribute')->get());
+        return new PropertiesCollection($property);
+    }
+
+    public function all(): PropertiesCollection
+    {
+        return new PropertiesCollection(Property::all());
     }
 
 

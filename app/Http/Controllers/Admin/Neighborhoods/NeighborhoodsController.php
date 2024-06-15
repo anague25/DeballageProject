@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin\Neighborhoods;
 use App\Models\Neighborhood;
 use App\Http\Controllers\Controller;
 use App\Contracts\Neighborhoods\NeighborhoodServiceContract;
-use App\Http\Requests\Neighborhood\NeighborhoodStoreRequest;
-use App\Http\Requests\Neighborhood\NeighborhoodUpdateRequest;
+use App\Http\Requests\Neighborhoods\NeighborhoodsStoreRequest;
+use App\Http\Requests\Neighborhoods\NeighborhoodsUpdateRequest;
 
 class NeighborhoodsController extends Controller
 {
@@ -29,7 +29,7 @@ class NeighborhoodsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(NeighborhoodStoreRequest $request)
+    public function store(NeighborhoodsStoreRequest $request)
     {
         return  $this->neighborhoodsService->create($request->validated());
     }
@@ -46,7 +46,7 @@ class NeighborhoodsController extends Controller
     /**
      * Update the specified neighborhood in storage.
      */
-    public function update(NeighborhoodUpdateRequest $request, Neighborhood $neighborhood)
+    public function update(NeighborhoodsUpdateRequest $request, Neighborhood $neighborhood)
     {
         return $this->neighborhoodsService->update($neighborhood, $request->validated());
     }

@@ -43,8 +43,14 @@ class CitiesServices implements CityServiceContract
 
     public function index(): CitiesCollection
     {
+        $cities = City::query()->when(request('query'),function($query,$searchQuery){
+            $query->where('name','like',"%{$searchQuery}%")->get();
+        })->with('neighborhoods')->latest()->paginate(5);
+        return new CitiesCollection($cities);
+    }
 
-        return new CitiesCollection(City::all());
+    public function all(){
+        return new CitiesCollection(City::latest()->get());
     }
 
 
@@ -56,7 +62,7 @@ class CitiesServices implements CityServiceContract
 
     public function show(City $attribute): CitiesResource
     {
-        return new CitiesResource($attribute);
+        return new CitiesResource($attribute->load('neighborhoods'));
     }
 
 

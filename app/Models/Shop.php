@@ -4,18 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
 {
     use HasFactory;
 
-    protected $filable = [
+    protected $fillable = [
+        'user_id',
         'name',
         'description',
-        'status',
+        'state',
         'profile',
         'cover',
-        'user_id',
     ];
 
 
@@ -28,18 +29,24 @@ class Shop extends Model
     public function cities()
     {
         return $this->belongsToMany(City::class, 'shop_city', 'shop_id', 'city_id')
-                    ->withPivot('neighborhood_id');
+            ->withPivot('neighborhood_id');
     }
 
     public function neighborhoods()
     {
         return $this->belongsToMany(Neighborhood::class, 'shop_city', 'shop_id', 'neighborhood_id')
-                    ->withPivot('city_id');
+            ->withPivot('city_id');
     }
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_shop')
+            ->withPivot('subCategory_id');
     }
 
     // Relation pour les avis (Review)

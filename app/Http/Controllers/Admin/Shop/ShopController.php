@@ -26,6 +26,11 @@ class ShopController extends Controller
         return $this->shopService->index();
     }
 
+    public function all()
+    {
+        return $this->shopService->all();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
