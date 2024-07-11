@@ -10,6 +10,7 @@ Your received this command for a user.
 - Customer City : {{ $validatedData['city'] }}
 - Customer Neighborhood : {{ $validatedData['neighborhood'] }}
 {{-- - Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
+{{-- - Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
 
 <hr>
 
