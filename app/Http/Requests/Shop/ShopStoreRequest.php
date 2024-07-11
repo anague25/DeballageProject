@@ -26,7 +26,7 @@ class ShopStoreRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'name' => 'required|string',
             'description' => 'required|string',
-            'state' => 'required|string|in:enable,desable,init',
+            'state' => 'sometimes|string|in:enable,desable,init',
             'profile' => 'required|image|mimes:jpg,png,jpeg,gif|max:2042',
             'cover' => 'required|image|mimes:jpg,png,jpeg,gif|max:2042',
             'city_fields.*.city_id' => 'required|exists:cities,id',
@@ -36,6 +36,13 @@ class ShopStoreRequest extends FormRequest
         ];
     }
 
-
-
+    public function messages(): array
+    {
+        return [
+            'city_fields.*.city_id.required' => 'The city field is required',
+            'city_fields.*.neighborhood_id.required' => 'The neighborhood field is required',
+            'category_fields.*.subCategory_id.required' => 'The subCategory field is required',
+            'category_fields.*.category_id.required' => 'The category field is required',
+        ];
+    }
 }

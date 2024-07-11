@@ -78,6 +78,8 @@ class PropertiesServices implements PropertyServiceContract
 
     public function delete(Property $property): Response
     {
+
+        $property->products()->sync([]);
         $property->delete();
 
         return response()->noContent();

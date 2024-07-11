@@ -33,4 +33,13 @@ class ProductsUpdateRequest extends FormRequest
             'images.*' => 'nullable|image|mimes:jpeg,png,gif|max:2048',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'attribute_fields.*.attribute_id.required' => 'The attribute field is required',
+            'attribute_fields.*.property_id.required' => 'The property field is required',
+
+        ];
+    }
 }

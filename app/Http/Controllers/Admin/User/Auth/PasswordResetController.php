@@ -34,10 +34,11 @@ class PasswordResetController extends Controller
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $user = User::whereEmail('email', $request->validated('email'))->first();
+        $user = User::whereEmail($request->validated('email'))->first();
         if (!$user) {
             return response()->json([
-                "message" => "User Not Found!"
+                "message" => "User Not Found!",
+                "email" => $request->validated('email')
 
             ], 404);
         }

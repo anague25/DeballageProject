@@ -22,14 +22,16 @@ class DeliveriesStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_id'=>'required|exists:order,id',
             'city' => 'required|string',
             'neighborhood' => 'required|string',
             'phone' => 'required|string',
+            'lastName' => 'required|string',
+            'firstName' => 'required|string',
+            'description' => 'required|string',
             'email' => 'required|email',
             'address' => 'required|string',
             'order_id' => 'required|exists:orders,id',
-            'state' => 'required|string',
+            'state' => 'sometimes|string|in:pending,delivered,cancelled',
         ];
     }
 }

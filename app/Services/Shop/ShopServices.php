@@ -5,12 +5,19 @@ namespace App\Services\Shop;
 use App\Models\Shop;
 use Illuminate\Http\Response;
 use App\Http\Resources\Shop\ShopResource;
+use App\Services\Shop\ShopsImagesServices;
 use App\Contracts\Shop\ShopServiceContract;
 use App\Http\Resources\Shop\ShopCollection;
-use App\Services\Shop\ShopsImagesServices;
+use App\Contracts\Products\ProductServiceContract;
 
 class ShopServices implements ShopServiceContract
 {
+    private $productsService;
+
+    public function __construct(ProductServiceContract $productsService)
+    {
+        $this->productsService = $productsService;
+    }
 
     /**
      * create an employee
@@ -121,7 +128,7 @@ class ShopServices implements ShopServiceContract
 
     public function show(Shop $shop): ShopResource
     {
-        return new ShopResource($shop);
+        return new ShopResource($shop->load('user', 'cities', 'categories', 'products'));
     }
 
 
@@ -135,11 +142,15 @@ class ShopServices implements ShopServiceContract
 
     public function delete(Shop $shop): Response
     {
+        foreach ($shop->products as $product) {
+            $this->productsService->delete($product);
+        }
+
         $shopImages = new ShopsImagesServices($validatedData = []);
         $shopImages->deleteImage($shop, $fieldName = 'profile');
         $shopImages->deleteImage($shop, $fieldName = 'cover');
-        $shop->cities()->delete();
-        $shop->categories()->delete();
+        $shop->cities()->sync([]);
+        $shop->categories()->sync([]);
         $shop->delete();
 
         return response()->noContent();

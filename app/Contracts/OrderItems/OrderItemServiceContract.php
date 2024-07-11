@@ -11,7 +11,7 @@ interface OrderItemServiceContract
     /**
      * @param array $data
      */
-    public function create(Order $order,array $data);
+    public function create(Order $order, array $data);
 
 
     /**
@@ -26,7 +26,7 @@ interface OrderItemServiceContract
      * @param OrderItem $orderItem
      * @param array $data
      */
-    public function update(array $data);
+    public function update(OrderItem $orderItem, array $data);
 
 
     /**

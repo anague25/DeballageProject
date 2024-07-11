@@ -9,7 +9,6 @@ class OrdersResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
@@ -18,9 +17,9 @@ class OrdersResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'number' => $this->number,
-            'total_amount' => $this->total_amount,
-            'state' => $this->state,
-            'order_items' => new OrdersCollection($this->whenLoaded('orderItems')),
+            'token' => $this->token,
+            'payment_id' => $this->payment_id,
+            'totalAmount' => $this->totalAmount,
         ];
     }
 }

@@ -16,9 +16,15 @@ class AchieveYourOrder extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $order;
+    public $orderItem;
+    public $delivery;
+    
+    public function __construct($order,$orderItem,$delivery)
     {
-        //
+        $this->order = $order;
+        $this->orderItem = $orderItem;
+        $this->delivery = $delivery;
     }
 
     /**

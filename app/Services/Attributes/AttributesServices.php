@@ -53,7 +53,7 @@ class AttributesServices implements AttributeServiceContract
 
     public function all(): AttributesCollection
     {
-        return new AttributesCollection(Attribute::latest()->get());
+        return new AttributesCollection(Attribute::with('properties')->latest()->get());
     }
 
 
@@ -79,9 +79,13 @@ class AttributesServices implements AttributeServiceContract
 
     public function delete(Attribute $attribute): Response
     {
+        $attribute->products()->sync([]);
+        foreach ($attribute->properties as $property) {
+            $property->attribute()->dissociate();
+            $property->save();
+        }
         $attribute->delete();
 
         return response()->noContent();
     }
-
 }

@@ -24,21 +24,22 @@ class RegisterController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $data['profile'] = $data['profile']->store('images/users', 'public');
-        if(isset($data['cniRecto'])){
+        if (isset($data['cniRecto'])) {
             $data['cniRecto'] = $data['cniRecto']->store('images/users', 'public');
         }
 
-        if(isset($data['cniVerso'])){
+        if (isset($data['cniVerso'])) {
             $data['cniVerso'] = $data['cniVerso']->store('images/users', 'public');
         }
         // dd($data);
 
         $user = User::create($data);
         //verification d'email
-        if (!$data['state']) {
-            Mail::to($user)->send(new EmailVerification($user));
-        }
+        Mail::to($user)->send(new EmailVerification($user));
 
-        return response()->json(['message' => 'User registered successfully. Please verify your email.'], 201);
+        return response()->json([
+            'message' => 'User registered successfully. Please verify your email.',
+            'user' => $user
+        ], 201);
     }
 }

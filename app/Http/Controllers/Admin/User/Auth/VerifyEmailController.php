@@ -18,14 +18,14 @@ class VerifyEmailController extends Controller
     }
 
 
-    public function sendMail()
-    {
+    // public function sendMail()
+    // {
 
-        Mail::to(Auth::user())->send(new EmailVerification(Auth::user()));
-        return response()->json([
-            'message' => 'Email verification link send on your email!'
-        ]);
-    }
+    //     Mail::to(Auth::user())->send(new EmailVerification(Auth::user()));
+    //     return response()->json([
+    //         'message' => 'Email verification link send on your email!'
+    //     ]);
+    // }
 
 
     public function verify(Request $request)

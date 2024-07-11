@@ -20,6 +20,7 @@ class OrdersServices implements OrderServiceContract
      */
     public function create($data): OrdersResource
     {
+        // dd($data);
 
         return new OrdersResource(Order::create($data));
     }
@@ -82,7 +83,7 @@ class OrdersServices implements OrderServiceContract
     {
         $order = Order::where('token', $token)->firstOrFail();
 
-         // Vérifier si l'utilisateur est authentifié, Vérifier que le token est valide pour cette commande et qu'elle n'est pas encore associée
+        // Vérifier si l'utilisateur est authentifié, Vérifier que le token est valide pour cette commande et qu'elle n'est pas encore associée
         if (auth()->check() && $order->user_id === null && $order->token === $token) {
             $this->associateOrderWithUser($order);
             return response()->json(['message' => 'Order associated successfully.']);

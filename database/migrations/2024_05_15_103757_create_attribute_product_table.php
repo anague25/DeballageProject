@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('attribute_id');
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('property_id')->nullable(); // Ajout de la colonne pour les propriétés
+            $table->unsignedBigInteger('property_id'); // Ajout de la colonne pour les propriétés
 
             $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

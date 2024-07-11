@@ -38,5 +38,13 @@ class ShopUpdateRequest extends FormRequest
     }
 
 
-   
+    public function messages(): array
+    {
+        return [
+            'city_fields.*.city_id.required' => 'The city field is required',
+            'city_fields.*.neighborhood_id.required' => 'The neighborhood field is required',
+            'category_fields.*.subCategory_id.required' => 'The subCategory field is required',
+            'category_fields.*.category_id.required' => 'The category field is required',
+        ];
+    }
 }

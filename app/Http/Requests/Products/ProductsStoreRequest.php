@@ -26,7 +26,7 @@ class ProductsStoreRequest extends FormRequest
             'name' => 'required|string',
             'description' => 'required|string',
             'images' => 'required|array', // Ajoutez cette règle
-            'images.*' => 'required|image|mimes:jpeg,png,gif|max:2048',
+            'images.*' => 'required|image|mimes:jpeg,png,gif,jpg|max:3080',
             'category_id' => 'required|exists:categories,id',
             'image' => 'required|image',
             'price' => 'required|numeric',
@@ -34,6 +34,16 @@ class ProductsStoreRequest extends FormRequest
             'shop_id' => 'required|exists:shops,id',
             'attribute_fields.*.attribute_id' => 'required|exists:attributes,id',
             'attribute_fields.*.property_id' => 'required|exists:properties,id',
+        ];
+    }
+
+
+    public function messages(): array
+    {
+        return [
+            'attribute_fields.*.attribute_id.required' => 'The attribute field is required',
+            'attribute_fields.*.property_id.required' => 'The property field is required',
+
         ];
     }
 }

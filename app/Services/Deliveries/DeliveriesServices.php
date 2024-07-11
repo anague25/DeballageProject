@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Contracts\Deliveries\DeliveryserviceContract;
 use App\Http\Resources\Deliveries\DeliveriesResource;
 use App\Http\Resources\Deliveries\DeliveriesCollection;
+use App\Models\OrderItem;
 
 class DeliveriesServices implements DeliveryserviceContract
 {
@@ -26,8 +27,9 @@ class DeliveriesServices implements DeliveryserviceContract
     {
         $delivery = Delivery::create($data);
         $order = Order::find($delivery->order_id);
-        Mail::to($delivery->email)->send(new AchieveYourOrder($order));
-        Mail::to(env('MAIL_ADMIN_EMAIL'))->send(new AdminOrderMail($order));
+        $orderItem = OrderItem::where('order_id',$delivery->order_id)->get();
+        Mail::to($delivery->email)->send(new AchieveYourOrder($order,$orderItem,$delivery));
+        Mail::to(env('MAIL_ADMIN_EMAIL'))->send(new AdminOrderMail($order,$orderItem,$delivery));
         return new DeliveriesResource($delivery);
     }
 

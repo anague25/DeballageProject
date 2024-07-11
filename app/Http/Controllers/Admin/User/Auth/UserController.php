@@ -5,11 +5,19 @@ namespace App\Http\Controllers\Admin\User\Auth;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Contracts\Shop\ShopServiceContract;
 use App\Http\Resources\Registers\RegistersResource;
 use App\Http\Resources\Registers\RegistersCollection;
 
 class UserController extends Controller
 {
+
+    private $shopService;
+
+    public function __construct(ShopServiceContract $shopService)
+    {
+        $this->shopService = $shopService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -32,19 +40,21 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json(['user' => $user], 201);
+        return response()->json(['user' => $user->load('shop')], 201);
     }
 
 
-   /**
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $user)
     {
-        $shop =  $user->shop;
-        $shop?->products()->delete();
-        $user->shop()?->delete();
-        // dd('ddd');
+
+        if ($user->shop) {
+            $shop =  $user->shop;
+            $this->shopService->delete($shop);
+        }
+
         if ($user->profile) {
             Storage::disk('public')->delete($user->profile);
         }

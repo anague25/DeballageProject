@@ -23,7 +23,7 @@ class LoginRequest extends FormRequest
     {
         // dd('sss');
         return [
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|exists:users,email',
             'password' => 'required|min:6',
         ];
     }

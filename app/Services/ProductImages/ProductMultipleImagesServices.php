@@ -24,7 +24,8 @@ class ProductMultipleImagesServices implements ProductMultipleImageServiceContra
     {
         $uploadedImagePaths = [];
 
-        foreach ($data as $image) {
+        // dd($data);
+        foreach ($data['images'] as $image) {
             $uploadedImagePath = $this->storeImage($image);
 
             $product->images()->create(['images' => $uploadedImagePath]);
@@ -43,7 +44,12 @@ class ProductMultipleImagesServices implements ProductMultipleImageServiceContra
      */
     public function update(ProductImage $productImage, array $data): ProductImagesResource
     {
-        $this->destroyImage($productImage->images);
+        if (count($productImage->images) >= 1) {
+            foreach ($productImage->images as $image) {
+
+                $this->destroyImage($image->images);
+            }
+        }
         $data['images'] = $this->storeImage($data['images']);
         $productImage->update($data);
         return new ProductImagesResource($productImage);
@@ -56,16 +62,16 @@ class ProductMultipleImagesServices implements ProductMultipleImageServiceContra
      * @return array.
      */
 
-     public function index($productId): ProductImagesCollection
-     {
-         // Trouver le produit par son ID
-         $product = Product::findOrFail($productId);
- 
-         // Récupérer toutes les images liées au produit
-         $images = $product->images;
- 
-         return new ProductImagesCollection($images);
-     }
+    public function index($productId): ProductImagesCollection
+    {
+        // Trouver le produit par son ID
+        $product = Product::findOrFail($productId);
+
+        // Récupérer toutes les images liées au produit
+        $images = $product->images;
+
+        return new ProductImagesCollection($images);
+    }
 
 
     /**
