@@ -9,6 +9,7 @@ Your received this command for a user.
 - Customer Name : {{ $validatedData['firstName'] }}
 - Customer City : {{ $validatedData['city'] }}
 - Customer Neighborhood : {{ $validatedData['neighborhood'] }}
+{{-- - Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
 
 <hr>
 
