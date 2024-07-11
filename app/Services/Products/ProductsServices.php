@@ -12,6 +12,7 @@ use App\Http\Resources\Products\ProductsResource;
 use App\Contracts\Products\ProductServiceContract;
 use App\Http\Resources\Products\ProductsCollection;
 use App\Contracts\ProductImages\ProductMultipleImageServiceContract;
+use App\Models\Property;
 
 class ProductsServices implements ProductServiceContract
 {
@@ -50,7 +51,7 @@ class ProductsServices implements ProductServiceContract
 
 
             $product->attributes()->attach($attributePropertyPairs);
-            $this->serviceMultipleImages->create($product, $validatedData['images']);
+            $this->serviceMultipleImages->create($product, $validatedData);
 
             DB::commit();
 
@@ -86,7 +87,7 @@ class ProductsServices implements ProductServiceContract
         $product->attributes()->sync($attributePropertyPairs);
         if (isset($validatedData['images'])) {
 
-            $this->serviceMultipleImages->create($product, $validatedData['images']);
+            $this->serviceMultipleImages->create($product, $validatedData);
         }
         return new ProductsResource($product);
     }
@@ -102,10 +103,24 @@ class ProductsServices implements ProductServiceContract
     {
         $products = Product::query()->when(request('query'), function ($query, $searchQuery) {
             $query->where('name', 'like', "%{$searchQuery}%")->get();
-        })->with('shop', 'category', 'attributes')->latest()->paginate(12);
+        })->with('shop', 'category', 'attributes')
+            ->latest()->paginate(12);
+        foreach ($products as $product) {
+            foreach ($product->attributes as $attribute) {
+                if ($attribute->pivot->property_id) {
+                    $attribute->properties = Property::where('id', $attribute->pivot->property_id)->first();
+                } else {
+                    $attribute->properties = null;
+                }
+            }
+        }
+
 
         return new ProductsCollection($products);
     }
+
+
+
 
 
     public function all(): ProductsCollection
@@ -125,7 +140,7 @@ class ProductsServices implements ProductServiceContract
 
     public function show(Product $product): ProductsResource
     {
-        return new ProductsResource($product->load('images'));
+        return new ProductsResource($product->load('images', 'shop', 'category', 'attributes'));
     }
 
 
@@ -143,11 +158,11 @@ class ProductsServices implements ProductServiceContract
         $productImages->deleteImage($product, $fieldName = 'image');
 
         foreach ($product->images as $image) {
-            Storage::delete($image->images);
+            Storage::disk('public')->delete($image->images);
             $image->delete();
         }
 
-        $product->attributes()->delete();
+        $product->attributes()->sync([]);
         $product->delete();
 
         return response()->noContent();

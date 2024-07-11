@@ -2,18 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'number',
-        'total_amount',
+        'token',
+        'totalAmount',
         'state',
+        'payment_id',
+        'number',
     ];
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($order) {
+    //         $order->token = 'CMD-' . Str::uuid();
+    //     });
+    // }
 
 
     public function user()
@@ -21,10 +33,12 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function products()
-    // {
-    //     return $this->belongsToMany(Product::class)->withPivot('quantity', 'price');
-    // }
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
 
     public function notifications()
     {

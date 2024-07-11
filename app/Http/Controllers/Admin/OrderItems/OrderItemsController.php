@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin\OrderItems;
 
-use App\Contracts\OrderItems\OrderItemServiceContract;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Http\Controllers\Controller;
+use App\Contracts\OrderItems\OrderItemServiceContract;
 use App\Http\Requests\OrderItems\OrderItemsStoreRequest;
 use App\Http\Requests\OrderItems\OrderItemsUpdateRequest;
-use App\Models\OrderItem;
 
 class OrderItemsController extends Controller
 {
@@ -29,9 +30,10 @@ class OrderItemsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(OrderItemsStoreRequest $request)
+    public function store(Order $order, OrderItemsStoreRequest $request)
     {
-        return  $this->orderItemsService->create($request->validated());
+        // dd($order);
+        return  $this->orderItemsService->create($order, $request->validated());
     }
 
     /**
@@ -46,9 +48,9 @@ class OrderItemsController extends Controller
     /**
      * Update the specified order in storage.
      */
-    public function update(OrderItemsUpdateRequest $request, OrderItem $order)
+    public function update(OrderItemsUpdateRequest $request, OrderItem $orderItem)
     {
-        return $this->orderItemsService->update($order, $request->validated());
+        return $this->orderItemsService->update($orderItem, $request->validated());
     }
 
     /**

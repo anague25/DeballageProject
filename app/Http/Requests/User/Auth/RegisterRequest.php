@@ -30,9 +30,9 @@ class RegisterRequest extends FormRequest
             'phone' => 'required|string',
             'cniRecto' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
             'cniVerso' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
-            'gender' => 'required|string',
+            'gender' => 'required|string|in:M,W',
             'state' => 'sometimes|string|in:init,enable,desable',
-            'role' => 'sometimes|string|in:admin,seller',
+            'role' => 'sometimes|string|in:admin,user',
             'profile' => 'required|image|mimes:jpg,png,jpeg,gif|max:2042',
         ];
     }

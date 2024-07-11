@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('shop_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('subCategory_id')->nullable(); // Ajout de la colonne pour les sous-catégories
-            
+
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('subCategory_id')->references('id')->on('categories')->onDelete('set null'); // Réglez la suppression sur null si la sous-catégorie est supprimée

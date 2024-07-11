@@ -22,9 +22,12 @@ class OrdersUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'total_amount' => 'sometimes|required|numeric',
+            'payment_id' => 'required|exists:payments,id',
+            'user_id' => 'nullable|numeric|exists:users,id',
+            'totalAmount' => 'required|numeric',
+            'token' => 'required|string',
             'number' => 'required|string',
-            'state' => 'required|string',
+            'state' => 'sometimes|string',
 
         ];
     }

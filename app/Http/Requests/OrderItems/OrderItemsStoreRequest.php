@@ -22,9 +22,18 @@ class OrderItemsStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*.product_id' => 'required|exists:products,id',
-            '*.price' => 'required|numeric',
-            '*.quantity' => 'required|numeric',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.price' => 'required|numeric',
+            'items.*.quantity' => 'required|numeric',
+
+            'city' => 'required|string',
+            'neighborhood' => 'required|string',
+            'phone' => 'required|string',
+            'lastName' => 'required|string',
+            'firstName' => 'required|string',
+            'description' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string',
         ];
     }
 }

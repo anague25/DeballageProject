@@ -31,6 +31,7 @@ class OrderController extends Controller
      */
     public function store(OrdersStoreRequest $request)
     {
+        // dd($request->validated());
         return  $this->ordersService->create($request->validated());
     }
 
@@ -59,7 +60,8 @@ class OrderController extends Controller
         return $this->ordersService->delete($order);
     }
 
-    public function associateOrder($token){
+    public function associateOrder($token)
+    {
         return $this->ordersService->associateOrder($token);
     }
 }

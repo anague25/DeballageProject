@@ -16,6 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id');
             $table->string('city');
             $table->string('email');
+            $table->string('phone');
+            $table->string('lastName');
+            $table->string('firstName');
+            $table->string('description');
             $table->string('neighborhood');
             $table->string('address');
             $table->enum('state', ['pending', 'delivered', 'cancelled'])->default('pending');

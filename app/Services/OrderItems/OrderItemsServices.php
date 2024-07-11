@@ -2,7 +2,6 @@
 
 namespace App\Services\OrderItems;
 
-use App\Models\Shop;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Response;
@@ -21,33 +20,60 @@ class OrderItemsServices implements OrderItemServiceContract
      * @param array $data.
      * @return OrderItemsCollection.
      */
-    public function create(Order $order,$validatedData): OrderItemsCollection
+    public function create(Order $order, $validatedData): OrderItemsCollection
     {
         $orderItems = [];
-
-        foreach ($validatedData as $itemData) {
+        foreach ($validatedData['items'] as $itemData) {
             $orderItem = new OrderItem($itemData);
             $order->orderItems()->save($orderItem);
             $orderItems[] = $orderItem;
         }
 
-        
 
-        return new OrderItemsCollection(OrderItem::create($orderItems));
+        // envoyer un mail a tous les vendeurs, le mail contient les differents p
+        $this->notifySellers($order->id,$validatedData);
+
+        return new OrderItemsCollection($orderItems);
     }
 
 
-    public function notifySellers($orderId)
+    public function notifySellers($orderId,$validatedData)
     {
-        $productItems = OrderItem::where('order_id', $orderId)->get();
-        $productsByShop = $productItems->groupBy('shop_id');
+        // Récupérer tous les OrderItems de la commande spécifiée
+        $orderItems = OrderItem::where('order_id', $orderId)->get();
 
-        foreach ($productsByShop as $shopId => $items) {
-            $shop = Shop::find($shopId);
-            $sellerEmail = $shop->user->email;
-            Mail::to($sellerEmail)->send(new SellerOrderMail($items));
+        // Initialiser un tableau pour regrouper les OrderItems par vendeur
+        $itemsBySeller = [];
+
+        // Itérer sur chaque OrderItem pour regrouper par vendeur
+        foreach ($orderItems as $orderItem) {
+            // Accéder au produit associé à cet OrderItem
+            $product = $orderItem->product;
+
+            if ($product) {
+                // Accéder au shop associé au produit
+                $shop = $product->shop;
+
+                if ($shop) {
+                    // Récupérer l'email du vendeur du shop
+                    $sellerEmail = $shop->user->email;
+
+                    // Ajouter l'OrderItem au tableau correspondant au vendeur
+                    if (!isset($itemsBySeller[$sellerEmail])) {
+                        $itemsBySeller[$sellerEmail] = [];
+                    }
+                    $itemsBySeller[$sellerEmail][] = $orderItem;
+                }
+            }
+        }
+
+        // Envoyer un email à chaque vendeur avec les OrderItems regroupés
+        foreach ($itemsBySeller as $sellerEmail => $items) {
+            // dd($itemsBySeller);
+            Mail::to($sellerEmail)->send(new SellerOrderMail($items,$validatedData));
         }
     }
+
 
     /**
      * update an OrderItem
@@ -55,17 +81,11 @@ class OrderItemsServices implements OrderItemServiceContract
      * @param OrderItem $OrderItem.
      * @return OrderItemsCollection.
      */
-    public function update(array $validatedData): OrderItemsCollection
+    public function update(OrderItem $orderItem, array $validatedData): OrderItemsResource
     {
-        $updatedOrderItems = [];
+        $orderItem->update($validatedData);
 
-    foreach ($validatedData as $itemData) {
-        $orderItem = OrderItem::findOrFail($itemData['id']);
-        $orderItem->update($itemData);
-        $updatedOrderItems[] = $orderItem;
-    }
-
-        return new OrderItemsCollection($updatedOrderItems);
+        return new OrderItemsResource($orderItem);
     }
 
 

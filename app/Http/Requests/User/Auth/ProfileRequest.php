@@ -22,16 +22,16 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255|unique:users,email,'.request()->id,
+            'email' => 'sometimes|email|max:255|unique:users,email,' . request()->id,
             'password' => 'sometimes|confirmed|min:6',
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
-            'phone' => 'required|string',
+            'firstName' => 'sometimes|string',
+            'lastName' => 'sometimes|string',
+            'phone' => 'sometimes|string',
             'cniRecto' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
             'cniVerso' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
-            'gender' => 'required|string',
+            'gender' => 'sometimes|string|in:M,W',
             'state' => 'sometimes|string|in:init,enable,desable',
-            'role' => 'nullable|string|in:admin,seller',
+            'role' => 'sometimes|string|in:admin,user',
             'profile' => 'sometimes|image|mimes:jpg,png,jpeg,gif|max:2042',
         ];
     }

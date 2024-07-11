@@ -30,9 +30,9 @@ class ProductImagesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductImageStoreRequest $request,Product $productId)
+    public function store(ProductImageStoreRequest $request, Product $product)
     {
-        return  $this->productImagesService->create($productId,$request->validated());
+        return  $this->productImagesService->create($product, $request->validated());
     }
 
     /**

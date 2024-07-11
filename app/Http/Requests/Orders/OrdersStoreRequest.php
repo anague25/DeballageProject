@@ -24,7 +24,13 @@ class OrdersStoreRequest extends FormRequest
     {
         return [
 
-            'total_amount' => 'required|numeric',
+            'payment_id' => 'required|exists:payments,id',
+            'user_id' => 'nullable|numeric|exists:users,id',
+            'totalAmount' => 'required|numeric',
+            'token' => 'required|string',
+            'number' => 'required|string',
+            'state' => 'sometimes|string',
+
         ];
     }
 
@@ -38,8 +44,7 @@ class OrdersStoreRequest extends FormRequest
     {
         // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
         $this->merge([
-            'user_id' => auth()->check() ? auth()->id() : null,
-            'token' => hash('sha256', Str::random(60)),
+            'token' => hash('sha256', Str::random(10)),
             'number' => 'CMD-' . (string) Str::uuid(),
         ]);
     }

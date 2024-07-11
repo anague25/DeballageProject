@@ -23,8 +23,10 @@ use App\Http\Controllers\Admin\User\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\User\Auth\PasswordResetController;
 use App\Http\Controllers\Admin\Neighborhoods\NeighborhoodsController;
 use App\Http\Controllers\Admin\Notifications\NotificationsController;
+use App\Http\Controllers\Admin\Payments\PaymentsController;
 use App\Http\Controllers\Admin\ProductImages\ProductImagesController;
 use App\Http\Controllers\Admin\User\Auth\ProfileController;
+use App\Http\Controllers\Admin\User\Auth\UserAuthController;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
@@ -45,11 +47,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // users
 Route::prefix('users')->group(function () {
+    Route::post('/login', LoginController::class)->name('login');
 
     //Authentification
-    Route::post('/login', LoginController::class);
     Route::post('/logout', LogoutController::class);
     Route::post('/register', RegisterController::class);
+    Route::get('/auth', UserAuthController::class);
     Route::post('/password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
     Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset')->middleware('signed');
     Route::post('/email/verify/send', [VerifyEmailController::class, 'sendMail']);
@@ -78,8 +81,6 @@ Route::apiResource('/attributes', AttributesController::class);
 Route::get('/cities/all', [CitiesController::class, 'all']);
 Route::apiResource('/cities', CitiesController::class);
 
-//manage the deliveries
-Route::apiResource('/deliveries', DeliveriesController::class);
 
 //manage the favorites
 Route::apiResource('/favorites', FavoritesController::class);
@@ -96,9 +97,14 @@ Route::apiResource('/notifications', NotificationsController::class);
 //manage the orders
 Route::get('/orders/associate/{token}', [OrderController::class, 'associateOrder']);
 Route::apiResource('/orders', OrderController::class);
+//manage payments
+Route::apiResource('/payments', PaymentsController::class);
 
 //manage the orderItems
-Route::apiResource('/order-items', OrderItemsController::class);
+Route::post('/order-items/{order}', [OrderItemsController::class, 'store']);
+Route::apiResource('/order-items', OrderItemsController::class)->except('store');
+//manage the deliveries
+Route::apiResource('/deliveries', DeliveriesController::class);
 
 //manage the products 
 Route::get('/products/all', [ProductsController::class, 'all']);
@@ -121,7 +127,7 @@ Route::apiResource('/shops', ShopController::class)->except('update');
 Route::post('/shops/{shop}', [ShopController::class, 'update']);
 
 //manage the Shop
-Route::apiResource('/productImages', ProductImagesController::class)->only('delete', 'show');
+Route::get('productImages/{product}', [ProductImagesController::class, 'index']);
 Route::post('productImages/{product}', [ProductImagesController::class, 'store']);
 Route::post('productImages/{productImage}', [ProductImagesController::class, 'update']);
-Route::get('productImages/{product}', [ProductImagesController::class, 'index']);
+Route::apiResource('/productImages', ProductImagesController::class)->only('destroy', 'show');

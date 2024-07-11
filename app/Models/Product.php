@@ -35,23 +35,27 @@ class Product extends Model
     {
         return $this->belongsToMany(Attribute::class)->withPivot('property_id');
     }
+    public function properties()
+    {
+        return $this->belongsToMany(Property::class, 'attribute_product', 'product_id', 'property_id');
+    }
 
     public function images()
     {
         return $this->hasMany(ProductImage::class);
     }
 
-     // Relation pour les avis (Review)
-     public function reviews()
-     {
-         return $this->morphMany(Review::class, 'reviewable');
-     }
- 
-     // Relation pour les favoris (Favorite)
-     public function favorites()
-     {
-         return $this->morphMany(Favorite::class, 'favoritable');
-     }
+    // Relation pour les avis (Review)
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    // Relation pour les favoris (Favorite)
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
 
     public function orders()
     {

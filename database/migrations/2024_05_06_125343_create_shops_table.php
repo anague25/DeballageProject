@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->longText('description');
             $table->enum('state', ['init', 'enable', 'desable'])->default('init');
             $table->string('profile');
             $table->string('cover');

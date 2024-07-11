@@ -3,7 +3,6 @@
 namespace App\Mail\Order;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,9 +15,14 @@ class SellerOrderMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+
+    public $items;
+    public $validatedData;
+
+    public function __construct(array $items,array $validatedData)
     {
-        //
+        $this->items = $items;
+        $this->validatedData = $validatedData;
     }
 
     /**
