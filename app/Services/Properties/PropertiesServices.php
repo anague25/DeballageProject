@@ -4,6 +4,7 @@ namespace App\Services\Properties;
 
 use App\Models\Property;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use App\Contracts\Properties\PropertyServiceContract;
 use App\Http\Resources\Properties\PropertiesResource;
 use App\Http\Resources\Properties\PropertiesCollection;
@@ -32,6 +33,14 @@ class PropertiesServices implements PropertyServiceContract
     {
         $property->update($data);
         return new PropertiesResource($property);
+    }
+
+
+    public function getAttributeUser()
+    {
+        $user = Auth::user();
+        $properties = Property::where('user_id', $user->id)->with('attribute')->get();
+        return response()->json(['properties' => $properties], 200);
     }
 
 

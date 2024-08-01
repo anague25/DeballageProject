@@ -1,7 +1,7 @@
 <x-mail::message>
 # Deballage Order
 
-Your received this command for a user.
+Successfully Order.
 
 - Order Number : {{ $order->number }}
 ### Customer's informations
@@ -9,12 +9,20 @@ Your received this command for a user.
 - Customer Name : {{ $delivery->firstName }}
 - Customer City : {{ $delivery->city }}
 - Customer Neighborhood : {{ $delivery->neighborhood }}
+
 <hr>
-@foreach ($orderItem as $item )
+{{-- 
+@foreach ($orderItems as $item )
 - Product Name : {{ $item->product->name }}
 - Quantity : {{ $item->quantity }}
 - Price : {{ $item->price }}
 
+@endforeach --}}
+
+@foreach($orderItems as $item)
+- **Product Name:** {{ $item->product->name }}
+- **Quantity:** {{ $item->quantity }}
+- **Price:** {{ $item->price }}
 @endforeach
 
 Thanks,<br>

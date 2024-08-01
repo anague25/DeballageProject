@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -15,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('attribute_id');
             $table->string('name');
-            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade');
+            $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreign('attribute_id')->references('id')->on('attributes')->nullable()->onDelete('cascade');
             $table->timestamps();
         });
     }

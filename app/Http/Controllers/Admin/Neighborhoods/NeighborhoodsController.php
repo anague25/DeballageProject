@@ -26,6 +26,12 @@ class NeighborhoodsController extends Controller
         return $this->neighborhoodsService->index();
     }
 
+    public function all()
+    {
+
+        return $this->neighborhoodsService->all();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

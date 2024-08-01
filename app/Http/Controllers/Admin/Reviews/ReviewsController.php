@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Reviews;
 
-use App\Contracts\Reviews\ReviewServiceContract;
+use App\Models\Shop;
+use App\Models\Review;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Contracts\Reviews\ReviewServiceContract;
 use App\Http\Requests\Review\ReviewStoreRequest;
 use App\Http\Requests\Review\ReviewUpdateRequest;
-use App\Models\Review;
 
 class ReviewsController extends Controller
 {
@@ -15,6 +18,8 @@ class ReviewsController extends Controller
     public function __construct(ReviewServiceContract $reviewsService)
     {
         $this->reviewsService = $reviewsService;
+        // Appliquer le middleware auth:sanctum uniquement sur les méthodes store, update et destroy
+        $this->middleware('auth:sanctum')->only(['store']);
     }
 
     /**
@@ -24,6 +29,13 @@ class ReviewsController extends Controller
     public function index()
     {
         return $this->reviewsService->index();
+    }
+
+    public function getReviews(Request $request)
+    {
+        $reviewableId = $request->query('reviewable_id');
+        $reviewableType = $request->query('reviewable_type');
+        return $this->reviewsService->getReviews($reviewableId, $reviewableType);
     }
 
     /**
@@ -41,6 +53,22 @@ class ReviewsController extends Controller
     public function show(Review $review)
     {
         return $this->reviewsService->show($review);
+    }
+
+    /**
+     * Get the number of distinct users who have left a review for a product.
+     */
+    public function getNumberOfReviewingUsersForProduct(Product $product)
+    {
+        return $this->reviewsService->getNumberOfReviewingUsersForProduct($product);
+    }
+
+    /**
+     * Get the number of distinct users who have left a review for a shop.
+     */
+    public function getNumberOfReviewingUsersForShop(Shop $shop)
+    {
+        return $this->reviewsService->getNumberOfReviewingUsersForShop($shop);
     }
 
     /**

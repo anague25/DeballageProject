@@ -68,12 +68,16 @@ Route::prefix('users')->group(function () {
 
 
 //manage the categories
+
+Route::get('/productsByCategory/{category}', [CategoriesController::class, 'productsByCategory']);
+Route::get('/user-categories', [CategoriesController::class, 'getCategoriesUser'])->middleware('auth:api');
 Route::get('/categories/all', [CategoriesController::class, 'all']);
 Route::apiResource('/categories', CategoriesController::class)->except('update');
 Route::post('/categories/{category}', [CategoriesController::class, 'update']);
 
 
 //manage the attributes
+Route::get('/user-attributes', [AttributesController::class, 'getAttributeUser'])->middleware('auth:api');
 Route::get('/attributes/all', [AttributesController::class, 'all']);
 Route::apiResource('/attributes', AttributesController::class);
 
@@ -83,21 +87,29 @@ Route::apiResource('/cities', CitiesController::class);
 
 
 //manage the favorites
+Route::delete('/remove-favorite/{id}', [FavoritesController::class, 'removeFavorite']);
 Route::apiResource('/favorites', FavoritesController::class);
+
 
 //manage the messages
 Route::apiResource('/messages', MessagesController::class);
 
 //manage the neighbordhood
+
+Route::get('/neighborhoods/all', [NeighborhoodsController::class, 'all']);
 Route::apiResource('/neighborhoods', NeighborhoodsController::class);
 
 //manage the notifications
 Route::apiResource('/notifications', NotificationsController::class);
 
 //manage the orders
+Route::get('/orders-shop', [OrderController::class, 'getOrdersByShop'])->middleware('auth:sanctum');
 Route::get('/orders/associate/{token}', [OrderController::class, 'associateOrder']);
+Route::middleware('auth:sanctum')->get('/user/orders', [OrderController::class, 'getUserOrders']);
 Route::apiResource('/orders', OrderController::class);
 //manage payments
+Route::middleware('auth:sanctum')->get('/shop-payments', [PaymentsController::class, 'getPaymentsByShop']);
+Route::middleware('auth:sanctum')->get('/user/payments', [PaymentsController::class, 'getUserPaymentssWithDetails']);
 Route::apiResource('/payments', PaymentsController::class);
 
 //manage the orderItems
@@ -112,10 +124,13 @@ Route::apiResource('/products', ProductsController::class)->except('update');
 Route::post('/products/{product}', [ProductsController::class, 'update']);
 
 //manage the properties
+Route::get('/user-properties', [PropertiesController::class, 'getAttributeUser'])->middleware('auth:api');
 Route::get('/properties/all', [PropertiesController::class, 'all']);
 Route::apiResource('/properties', PropertiesController::class);
 
 //manage the reviews
+
+Route::get('/all-reviews', [ReviewsController::class, 'getReviews']);
 Route::apiResource('/reviews', ReviewsController::class);
 
 //manage the settings

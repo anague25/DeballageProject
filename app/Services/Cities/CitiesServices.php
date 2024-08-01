@@ -43,13 +43,14 @@ class CitiesServices implements CityServiceContract
 
     public function index(): CitiesCollection
     {
-        $cities = City::query()->when(request('query'),function($query,$searchQuery){
-            $query->where('name','like',"%{$searchQuery}%")->get();
+        $cities = City::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%")->get();
         })->with('neighborhoods')->latest()->paginate(5);
         return new CitiesCollection($cities);
     }
 
-    public function all(){
+    public function all()
+    {
         return new CitiesCollection(City::latest()->get());
     }
 
@@ -74,9 +75,13 @@ class CitiesServices implements CityServiceContract
      * @return Illuminate\Http\Response.
      */
 
-    public function delete(City $attribute): Response
+    public function delete(City $city): Response
     {
-        $attribute->delete();
+        foreach ($city->neighborhoods as $neighborhood) {
+            $neighborhood->city()->dissociate();
+            $neighborhood->save();
+        }
+        $city->delete();
 
         return response()->noContent();
     }

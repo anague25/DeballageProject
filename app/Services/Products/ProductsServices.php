@@ -12,6 +12,7 @@ use App\Http\Resources\Products\ProductsResource;
 use App\Contracts\Products\ProductServiceContract;
 use App\Http\Resources\Products\ProductsCollection;
 use App\Contracts\ProductImages\ProductMultipleImageServiceContract;
+use App\Models\Neighborhood;
 use App\Models\Property;
 
 class ProductsServices implements ProductServiceContract
@@ -140,7 +141,11 @@ class ProductsServices implements ProductServiceContract
 
     public function show(Product $product): ProductsResource
     {
-        return new ProductsResource($product->load('images', 'shop', 'category', 'attributes'));
+        $product =  $product->load('images', 'shop.cities', 'category', 'attributes');
+        foreach ($product->shop->cities as $city) {
+            $city->neighborhood = Neighborhood::find($city->pivot->neighborhood_id);
+        }
+        return new ProductsResource($product);
     }
 
 

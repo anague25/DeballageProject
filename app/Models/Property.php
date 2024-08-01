@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Property extends Model
 {
     use HasFactory;
-    protected $fillable = ['attribute_id', 'name'];
+    protected $fillable = ['attribute_id', 'name', 'user_id'];
 
     public function attribute()
     {

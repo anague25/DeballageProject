@@ -3,6 +3,7 @@
 namespace App\Contracts\Categories;
 
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 interface CategoryServiceContract
 {
@@ -16,8 +17,12 @@ interface CategoryServiceContract
     /**
      * @param Category attribute
      */
-    public function show(Category $attribute);
+    public function show(Category $category);
 
+
+    public function getCategoriesUser();
+
+    public function productsByCategory(Request $request, Category $category);
 
     public function index();
 

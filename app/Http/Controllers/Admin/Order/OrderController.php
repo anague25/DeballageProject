@@ -26,6 +26,12 @@ class OrderController extends Controller
         return $this->ordersService->index();
     }
 
+
+    public function getUserOrders()
+    {
+        return $this->ordersService->getUserOrdersWithDetails();
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -42,6 +48,15 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return $this->ordersService->show($order);
+    }
+
+    /**
+     * Display the specified order.
+     * 
+     */
+    public function getOrdersByShop()
+    {
+        return $this->ordersService->getOrdersByShop();
     }
 
     /**

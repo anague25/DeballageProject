@@ -14,6 +14,7 @@ class FavoritesController extends Controller
 
     public function __construct(FavoriteServiceContract $favoritesService)
     {
+        $this->middleware('auth:api');
         $this->favoritesService = $favoritesService;
     }
 
@@ -31,7 +32,14 @@ class FavoritesController extends Controller
      */
     public function store(FavoritesStoreRequest $request)
     {
+        // dd('ddd');
         return  $this->favoritesService->create($request->validated());
+    }
+
+    public function removeFavorite($id)
+    {
+
+        return  $this->favoritesService->removeFavorite($id);
     }
 
     /**

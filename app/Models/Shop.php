@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Shop extends Model
 {
@@ -59,5 +61,32 @@ class Shop extends Model
     public function favorites()
     {
         return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+
+
+    public function orders()
+    {
+        return $this->hasManyThrough(
+            Order::class,
+            Product::class,
+            'shop_id',      // Clé étrangère dans Product pour relier à Shop
+            'id',           // Clé locale dans Shop
+            'id',           // Clé locale dans Product pour relier à OrderItem
+            'product_id'    // Clé étrangère dans OrderItem pour relier à Product
+        )
+            ->join('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->distinct();
+    }
+
+
+    // Dans le modèle Shop.php
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Order::class, 'id', 'order_id', 'id', 'id')
+            ->join('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->join('products', 'products.id', '=', 'order_items.product_id')
+            ->where('products.shop_id', '=', $this->id)
+            ->distinct();
     }
 }

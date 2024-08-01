@@ -33,9 +33,19 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function deliveries()
+    {
+        return $this->hasOne(Delivery::class);
     }
 
 

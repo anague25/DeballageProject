@@ -15,4 +15,14 @@ class Payment extends Model
         'payment_method',
         'state',
     ];
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
 }

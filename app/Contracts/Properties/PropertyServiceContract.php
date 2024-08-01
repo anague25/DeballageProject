@@ -13,6 +13,8 @@ interface PropertyServiceContract
     public function create(array $data);
 
 
+    public function getAttributeUser();
+
     /**
      * @param Property $property
      */
@@ -20,7 +22,7 @@ interface PropertyServiceContract
 
 
     public function index();
-    
+
     public function all();
 
     /**

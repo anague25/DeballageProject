@@ -21,6 +21,9 @@ interface NeighborhoodServiceContract
 
     public function index();
 
+
+    public function all();
+
     /**
      * @param Neighborhood $neighborhood
      * @param array $data

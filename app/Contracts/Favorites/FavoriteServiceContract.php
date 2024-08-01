@@ -12,6 +12,11 @@ interface FavoriteServiceContract
      */
     public function create(array $data);
 
+    /**
+     * @param $id
+     */
+    public function removeFavorite($id);
+
 
     /**
      * @param Favorite $favorite

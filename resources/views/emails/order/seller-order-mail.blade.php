@@ -4,11 +4,11 @@
 Your received this command for a user.
 
 - Order Number : {{ $items[0]->order->number }}
-### Customer's informations
+{{-- ### Customer's informations
 - Customer Email : {{ $validatedData['email'] }}
 - Customer Name : {{ $validatedData['firstName'] }}
 - Customer City : {{ $validatedData['city'] }}
-- Customer Neighborhood : {{ $validatedData['neighborhood'] }}
+- Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
 {{-- - Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
 {{-- - Customer Neighborhood : {{ $validatedData['neighborhood'] }} --}}
 

@@ -17,13 +17,13 @@ class AchieveYourOrder extends Mailable
      * Create a new message instance.
      */
     public $order;
-    public $orderItem;
+    public $orderItems;
     public $delivery;
-    
-    public function __construct($order,$orderItem,$delivery)
+
+    public function __construct($order, $orderItems, $delivery)
     {
         $this->order = $order;
-        $this->orderItem = $orderItem;
+        $this->orderItems = $orderItems;
         $this->delivery = $delivery;
     }
 
@@ -33,7 +33,7 @@ class AchieveYourOrder extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Achieve Your Order',
+            subject: 'New Order Notification',
         );
     }
 

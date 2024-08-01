@@ -9,6 +9,8 @@ use App\Services\Shop\ShopsImagesServices;
 use App\Contracts\Shop\ShopServiceContract;
 use App\Http\Resources\Shop\ShopCollection;
 use App\Contracts\Products\ProductServiceContract;
+use App\Models\Category;
+use App\Models\Neighborhood;
 
 class ShopServices implements ShopServiceContract
 {
@@ -105,13 +107,46 @@ class ShopServices implements ShopServiceContract
      * @return array.
      */
 
+    // public function index(): ShopCollection
+    // {
+    //     $shops =  Shop::query()->when(request('query'), function ($query, $searchQuery) {
+    //         $query->where('name', 'like', "%{$searchQuery}%");
+    //     })->with('user', 'cities', 'products', 'categories')->latest()->paginate(5);
+    //     return new ShopCollection($shops);
+    // }
     public function index(): ShopCollection
     {
-        $shops =  Shop::query()->when(request('query'), function ($query, $searchQuery) {
-            $query->where('name', 'like', "%{$searchQuery}%");
-        })->with('user', 'cities', 'products', 'categories')->latest()->paginate(5);
+        $shops = Shop::query()
+            ->when(request('city'), function ($query, $city) {
+                $query->whereHas('cities', function ($query) use ($city) {
+                    $query->where('name', $city);
+                });
+            })
+            ->when(request('neighborhood'), function ($query, $neighborhood) {
+                $query->whereHas('neighborhoods', function ($query) use ($neighborhood) {
+                    $query->where('name', $neighborhood);
+                });
+            })
+            // ->when(request('search'), function ($query, $search) {
+            //     $query->where('name', 'like', '%' . $search . '%')
+            //         ->orWhereHas('categories', function ($query) use ($search) {
+            //             $query->where('name', 'like', '%' . $search . '%');
+            //         });
+            // })
+            ->when(request('search'), function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhereHas('categories', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                });
+            })
+            ->paginate(10);
         return new ShopCollection($shops);
     }
+
+
+
 
     public function all(): ShopCollection
     {
@@ -128,7 +163,14 @@ class ShopServices implements ShopServiceContract
 
     public function show(Shop $shop): ShopResource
     {
-        return new ShopResource($shop->load('user', 'cities', 'categories', 'products'));
+        $shop = $shop->load('user', 'cities', 'categories', 'products.category');
+        foreach ($shop->cities as $city) {
+            $city->neighborhood = Neighborhood::find($city->pivot->neighborhood_id);
+        }
+        foreach ($shop->categories as $category) {
+            $category->subCategory = Category::find($category->pivot->subCategory_id);
+        }
+        return new ShopResource($shop);
     }
 
 

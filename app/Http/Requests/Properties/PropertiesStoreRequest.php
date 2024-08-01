@@ -24,6 +24,7 @@ class PropertiesStoreRequest extends FormRequest
         return [
             'attribute_id' => 'required|exists:attributes,id',
             'name' => 'required|string',
+            'user_id' => 'nullable|exists:users,id',
         ];
     }
 }

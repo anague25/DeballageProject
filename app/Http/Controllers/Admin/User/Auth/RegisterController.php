@@ -12,10 +12,10 @@ use App\Http\Requests\User\Auth\RegisterRequest;
 class RegisterController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('guest');
+    // }
     /**
      * Handle the incoming request.
      */

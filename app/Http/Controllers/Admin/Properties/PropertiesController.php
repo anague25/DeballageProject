@@ -31,6 +31,11 @@ class PropertiesController extends Controller
         return $this->propertiesService->all();
     }
 
+    public function getAttributeUser()
+    {
+        return $this->propertiesService->getAttributeUser();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

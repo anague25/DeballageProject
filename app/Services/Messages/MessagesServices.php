@@ -20,7 +20,7 @@ class MessagesServices implements MessageServiceContract
      * @return MessagesResource.
      */
     public function create($data): MessagesResource
-    {   
+    {
         Mail::send(new UserContactDeballage($data));
         return new MessagesResource(Message::create($data));
     }

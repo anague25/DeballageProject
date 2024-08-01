@@ -17,13 +17,13 @@ class AdminOrderMail extends Mailable
      * Create a new message instance.
      */
     public $order;
-    public $orderItem;
+    public $orderItemsGroupedBySeller;
     public $delivery;
     
-    public function __construct($order,$orderItem,$delivery)
+    public function __construct($order,$orderItemsGroupedBySeller,$delivery)
     {
         $this->order = $order;
-        $this->orderItem = $orderItem;
+        $this->orderItemsGroupedBySeller = $orderItemsGroupedBySeller;
         $this->delivery = $delivery;
     }
     

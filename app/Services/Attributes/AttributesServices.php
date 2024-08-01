@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Contracts\Attributes\AttributeServiceContract;
 use App\Http\Resources\Attributes\AttributesResource;
 use App\Http\Resources\Attributes\AttributesCollection;
+use Illuminate\Support\Facades\Auth;
 
 class AttributesServices implements AttributeServiceContract
 {
@@ -66,6 +67,14 @@ class AttributesServices implements AttributeServiceContract
     public function show(Attribute $attribute): AttributesResource
     {
         return new AttributesResource($attribute->load('properties'));
+    }
+
+    public function getAttributeUser()
+    {
+        $user = Auth::user();
+        // dd($user);
+        $attributes = Attribute::where('user_id', $user->id)->get();
+        return response()->json(['attributes' => $attributes], 200);
     }
 
 

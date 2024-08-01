@@ -19,6 +19,7 @@ interface AttributeServiceContract
     public function show(Attribute $attribute);
 
 
+    public function getAttributeUser();
     public function index();
 
     public function all();
@@ -34,6 +35,4 @@ interface AttributeServiceContract
      * @param Attribute $attribute
      */
     public function delete(Attribute $attribute);
-
-   
 }

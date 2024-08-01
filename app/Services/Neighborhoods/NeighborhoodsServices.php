@@ -30,7 +30,7 @@ class NeighborhoodsServices implements NeighborhoodServiceContract
      */
     public function update(Neighborhood $neighborhood, array $data): NeighborhoodsResource
     {
-        
+
         $neighborhood->update($data);
         return new NeighborhoodsResource($neighborhood);
     }
@@ -43,12 +43,19 @@ class NeighborhoodsServices implements NeighborhoodServiceContract
      */
 
     public function index(): NeighborhoodsCollection
-    {   
-        $neighborhood = Neighborhood::query()->when(request('query'),function($query,$searchQuery){
-            $query->where('name','like',"%{$searchQuery}%")->get();
+    {
+        $neighborhood = Neighborhood::query()->when(request('query'), function ($query, $searchQuery) {
+            $query->where('name', 'like', "%{$searchQuery}%")->get();
         })->with('city')->latest()->paginate(5);
         return new NeighborhoodsCollection($neighborhood);
     }
+
+    public function all()
+    {
+
+        return new NeighborhoodsCollection(Neighborhood::latest()->get());
+    }
+
 
 
     /**

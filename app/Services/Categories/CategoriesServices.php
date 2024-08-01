@@ -2,8 +2,13 @@
 
 namespace App\Services\Categories;
 
+use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Products\ProductsResource;
+use App\Http\Resources\Products\ProductsCollection;
 use App\Contracts\Categories\CategoryServiceContract;
 use App\Http\Resources\Categories\CategoriesResource;
 use App\Http\Resources\Categories\CategoriesCollection;
@@ -52,9 +57,35 @@ class CategoriesServices implements CategoryServiceContract
     {
         $categories =  Category::query()->when(request('query'), function ($query, $searchQuery) {
             $query->where('name', 'like', "%{$searchQuery}%");
-        })->with('children')->latest()->paginate(5);
+        })->with(['children', 'products'])->latest()->paginate(10);
         return new CategoriesCollection($categories);
     }
+
+    // public function productsByCategory(Category $category)
+    // {
+    //     // dd('aaaa');
+    //     $products =  Product::where('category_id', $category->id)->with('attributes')->latest()->paginate(1);
+    //     return new ProductsCollection($products);
+    // }
+
+
+    public function productsByCategory(Request $request, Category $category)
+    {
+        $query = Product::where('category_id', $category->id)->with('attributes');
+
+        if ($request->has('properties')) {
+            $properties = $request->get('properties');
+            $query->whereHas('attributes', function ($q) use ($properties) {
+                $q->whereIn('property_id', $properties);
+            });
+        }
+
+        $products = $query->latest()->paginate(10);
+
+        return new ProductsCollection($products);
+    }
+
+
 
     /**
      * get all $attributes without pagination
@@ -64,7 +95,7 @@ class CategoriesServices implements CategoryServiceContract
 
     public function all(): CategoriesCollection
     {
-        $categories = Category::with('children')->latest()->get();
+        $categories = Category::with('children', 'products')->latest()->get();
         return new CategoriesCollection($categories);
     }
 
@@ -78,8 +109,18 @@ class CategoriesServices implements CategoryServiceContract
     public function show(Category $category): CategoriesResource
     {
 
-        return new CategoriesResource($category->load('children'));
+        return new CategoriesResource($category->load(['children', 'products']));
     }
+
+
+    public function getCategoriesUser()
+    {
+        $user = Auth::user();
+        // dd($user);
+        $categories = Category::where('user_id', $user->id)->with('parent')->get();
+        return response()->json(['categories' => $categories], 200);
+    }
+
 
 
 
@@ -94,6 +135,10 @@ class CategoriesServices implements CategoryServiceContract
     {
         $categoryImages = new CategoriesImagesServices($data = []);
         $categoryImages->deleteImage($category, $fieldName = 'image');
+        foreach ($category->children as $children) {
+            $children->parent()->dissociate();
+            $children->save();
+        }
         $category->delete();
 
         return response()->noContent();

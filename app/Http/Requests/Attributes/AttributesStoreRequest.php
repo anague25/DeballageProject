@@ -22,7 +22,8 @@ class AttributesStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:attributes,name'
+            'name' => 'required|string|unique:attributes,name',
+            'user_id' => 'nullable|exists:users,id',
         ];
     }
 }

@@ -19,7 +19,13 @@ interface OrderServiceContract
     public function show(Order $order);
 
 
+
+    public function getOrdersByShop();
+
+
     public function index();
+
+    public function getUserOrdersWithDetails();
 
     /**
      * @param Order $order

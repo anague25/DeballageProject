@@ -13,6 +13,7 @@ class Category extends Model
         'parent_id',
         'description',
         'image',
+        'user_id',
     ];
 
 
@@ -34,6 +35,6 @@ class Category extends Model
     public function shops()
     {
         return $this->belongsToMany(Shop::class, 'category_shop')
-                    ->withPivot('sub_category_id');
+            ->withPivot('sub_category_id');
     }
 }

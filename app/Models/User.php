@@ -38,6 +38,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Shop::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -45,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function favorites()
     {
-        return $this->morphToMany('App\Models\Favoritable', 'favoritable');
+        return $this->hasMany(Favorite::class);
     }
 
     public function reviews()

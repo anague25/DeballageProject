@@ -2,12 +2,14 @@
 
 namespace App\Services\Orders;
 
+use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Response;
-use App\Contracts\Orders\OrderServiceContract;
-use App\Http\Resources\Orders\OrdersResource;
-use App\Http\Resources\Orders\OrdersCollection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Orders\OrdersResource;
+use App\Contracts\Orders\OrderServiceContract;
+use App\Http\Resources\Orders\OrdersCollection;
+use App\Models\OrderItem;
 
 class OrdersServices implements OrderServiceContract
 {
@@ -38,6 +40,87 @@ class OrdersServices implements OrderServiceContract
     }
 
 
+
+    public function getUserOrdersWithDetails(): array|Response
+    {
+        $userId = Auth::id();
+
+        $orders = Order::where('user_id', $userId)
+            ->with([
+                'orderItems.product.shop', // Charge les produits et les shops associés aux order items
+                'orderItems.product.category', // Charge la catégorie associée aux produits
+                'payment', // Charge les informations de paiement
+                'deliveries' // Charge les informations de paiement
+            ])
+            ->get();
+
+        return $orders->toArray();
+    }
+
+
+    // public function getOrdersShop(){
+    //     $user = User::find(Auth::id());
+    //     $shop = $user->shop;
+    //     $orderItems = OrderItem::with('product')->get();
+    // }
+
+
+    /**
+     * Récupérer tous les orders liés à un shop.
+     */
+    // public function getOrdersByShop()
+    // {
+    //     $user = User::find(Auth::id());
+    //     $shop = $user->shop;
+    //     $orders = Order::with(['orderItems.product', 'payment'])->get();
+    //     $shopOrders = [];
+    //     foreach ($orders as $order) {
+    //         foreach ($order->orderItems as $item) {
+    //             $product = $item->product;
+    //             if ($product->shop_id === $shop->id) {
+    //                 if (!in_array($order, $shopOrders)) {
+    //                     $shopOrders[] = $order;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $shopOrders = collect($shopOrders);
+
+    //     dd($shopOrders->toArray());
+
+    //     // return response()->json($orders);
+    // }
+
+
+
+    /**
+     * Récupérer tous les orders liés à un shop.
+     */
+    public function getOrdersByShop()
+    {
+        // Récupérer l'utilisateur actuellement authentifié
+        $user = Auth::user();
+
+        // Vérifier si l'utilisateur possède un shop
+        if (!$user || !$user->shop) {
+            return response()->json(['message' => 'Shop not found'], 404);
+        }
+
+        // Récupérer le shop de l'utilisateur
+        $shop = $user->shop;
+
+        // Récupérer les commandes liées aux produits du shop
+        $orders = Order::whereHas('orderItems.product', function ($query) use ($shop) {
+            $query->where('shop_id', $shop->id);
+        })->with(['orderItems.product', 'payment', 'user', 'deliveries'])->get();
+
+        return response()->json($orders, 200);
+    }
+
+
+
+
     /**
      * get all orders
      * 
@@ -47,7 +130,7 @@ class OrdersServices implements OrderServiceContract
     public function index(): OrdersCollection
     {
 
-        return new OrdersCollection(Order::all());
+        return new OrdersCollection(Order::paginate(15));
     }
 
 

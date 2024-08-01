@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Reviews;
 
+use App\Models\Product;
 use App\Models\Review;
+use App\Models\Shop;
 
 interface ReviewServiceContract
 {
@@ -19,7 +21,14 @@ interface ReviewServiceContract
     public function show(Review $review);
 
 
+    public function getNumberOfReviewingUsersForProduct(Product $product);
+
+    public function getNumberOfReviewingUsersForShop(Shop $shop);
+
+
     public function index();
+
+    public function getReviews(int $reviewableId, string $reviewableType);
 
     /**
      * @param Review $review

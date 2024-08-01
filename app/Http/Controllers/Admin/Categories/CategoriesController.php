@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Categories;
 
 use App\Models\Category;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Contracts\Categories\CategoryServiceContract;
 use App\Http\Requests\Categories\CategoriesStoreRequest;
@@ -35,6 +36,11 @@ class CategoriesController extends Controller
         return $this->categoriesService->all();
     }
 
+    public function productsByCategory(Request $request, Category $category)
+    {
+        return $this->categoriesService->productsByCategory($request, $category);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -42,6 +48,16 @@ class CategoriesController extends Controller
     {
         return  $this->categoriesService->create($request->validated());
     }
+
+
+
+    public function getCategoriesUser()
+    {
+        return  $this->categoriesService->getCategoriesUser();
+    }
+
+
+
 
     /**
      * Display the specified category.

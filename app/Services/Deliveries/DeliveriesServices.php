@@ -9,12 +9,12 @@ use Illuminate\Http\Response;
 use App\Mail\Order\AdminOrderMail;
 use App\Mail\Order\AchieveYourOrder;
 use Illuminate\Support\Facades\Mail;
-use App\Contracts\Deliveries\DeliveryserviceContract;
+use App\Contracts\Deliveries\DeliveryServiceContract;
 use App\Http\Resources\Deliveries\DeliveriesResource;
 use App\Http\Resources\Deliveries\DeliveriesCollection;
 use App\Models\OrderItem;
 
-class DeliveriesServices implements DeliveryserviceContract
+class DeliveriesServices implements DeliveryServiceContract
 {
 
     /**
@@ -25,11 +25,18 @@ class DeliveriesServices implements DeliveryserviceContract
      */
     public function create($data): DeliveriesResource
     {
+        // dd(env('MAIL_ADMIN_EMAIL'));
         $delivery = Delivery::create($data);
         $order = Order::find($delivery->order_id);
-        $orderItem = OrderItem::where('order_id',$delivery->order_id)->get();
-        Mail::to($delivery->email)->send(new AchieveYourOrder($order,$orderItem,$delivery));
-        Mail::to(env('MAIL_ADMIN_EMAIL'))->send(new AdminOrderMail($order,$orderItem,$delivery));
+        $orderItems = OrderItem::where('order_id', $delivery->order_id)->get();
+
+        // Group order items by seller
+        $orderItemsGroupedBySeller = $orderItems->groupBy(function ($item) {
+            return $item->product->shop->user->email;
+        });
+
+        Mail::to($delivery->email)->send(new AchieveYourOrder($order, $orderItems, $delivery));
+        Mail::to(env('MAIL_ADMIN_EMAIL'))->send(new AdminOrderMail($order, $orderItemsGroupedBySeller, $delivery));
         return new DeliveriesResource($delivery);
     }
 

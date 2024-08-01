@@ -30,7 +30,7 @@ class UserContactDeballage extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            to: 'anaguesonnaroosvelt@gmail.com',
+            to: 'contact@deballage.cm',
             replyTo:$this->data['email'],
             subject: 'User Contact Deballage',
         );

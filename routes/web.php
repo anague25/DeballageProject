@@ -16,3 +16,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/create-storage-link', function () {
+    // Chemin vers le dossier public
+    $publicPath = public_path('storage');
+
+    // Chemin vers le dossier de stockage
+    $storagePath = storage_path('app/public');
+
+    // Vérifie si le lien symbolique existe déjà
+    if (!file_exists($publicPath)) {
+        // Crée le lien symbolique
+        symlink($storagePath, $publicPath);
+        return 'Lien symbolique créé avec succès.';
+    } else {
+        return 'Le lien symbolique existe déjà.';
+    }
+});

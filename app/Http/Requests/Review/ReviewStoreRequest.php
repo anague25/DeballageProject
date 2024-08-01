@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Review;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,23 +24,34 @@ class ReviewStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'reviewable_id' => 'required|integer',
-            'reviewable_type' => 'required|string',
+            'reviewable_type' => [
+                'required',
+                'string',
+                Rule::in(['App\\Models\Product', 'App\\Models\\Shop']),
+            ],
+            'reviewable_id' => 'required|integer|exists:' . $this->getReviewableTableName() . ',id',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string',
+            'comment' => 'required|string',
         ];
     }
 
+
     /**
-     * Prépare les données pour validation.
+     * Get the table name for the reviewable type.
      *
-     * @return array
+     * @return string
      */
-    protected function prepareForValidation()
+    private function getReviewableTableName()
     {
-        // Ajouter l'ID de l'utilisateur authentifié aux données de la requête
-        $this->merge([
-            'user_id' => Auth::id()
-        ]);
+        $reviewableType = $this->input('reviewable_type');
+        // Convertir le type de modèle en nom de table
+        switch ($reviewableType) {
+            case 'App\\Models\\Product':
+                return 'products';
+            case 'App\\Models\\Shop':
+                return 'shops';
+            default:
+                return 'unknown';
+        }
     }
 }
